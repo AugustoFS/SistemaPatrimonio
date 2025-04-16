@@ -1,4 +1,3 @@
-// App.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './App.css';
@@ -15,27 +14,42 @@ const App = () => {
     setMessage('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const users = JSON.parse(localStorage.getItem('users')) || {};
+    try {
+      const endpoint = isLogin
+        ? `/api/usuarios?email=${email}&senha=${password}`
+        : `/api/usuarios`;
 
-    if (isLogin) {
-      if (users[email] && users[email] === password) {
-        setMessage('');
-        navigate('/home');
+      const method = isLogin ? 'GET' : 'POST';
+
+      const response = await fetch(endpoint, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        ...(method === 'POST' && { body: JSON.stringify({ email, senha: password }) })
+      });
+
+      const data = await response.json();
+
+      if (isLogin) {
+        if (data.autenticado) {
+          setMessage('');
+          navigate('/home');
+        } else {
+          setMessage('Credenciais inválidas!');
+        }
       } else {
-        setMessage('Credenciais inválidas!');
+        if (response.ok) {
+          setMessage('');
+          navigate('/home');
+        } else {
+          setMessage(data.erro || 'Erro ao cadastrar usuário.');
+        }
       }
-    } else {
-      if (users[email]) {
-        setMessage('Usuário já cadastrado!');
-      } else {
-        users[email] = password;
-        localStorage.setItem('users', JSON.stringify(users));
-        setMessage('');
-        navigate('/home');
-      }
+    } catch (error) {
+      console.error('Erro:', error);
+      setMessage('Erro na comunicação com o servidor.');
     }
 
     setEmail('');
