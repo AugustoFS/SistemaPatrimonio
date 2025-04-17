@@ -1,4 +1,3 @@
-// /api/usuarios.js
 import { Pool } from 'pg';
 
 const pool = new Pool({
@@ -12,6 +11,10 @@ export default async function handler(req, res) {
     if (req.method === 'POST') {
         const { email, senha } = req.body;
 
+        if (!email || !senha) {
+            return res.status(400).json({ erro: 'Email e senha são obrigatórios' });
+        }
+
         try {
             const result = await pool.query(
                 'INSERT INTO usuarios (email, senha) VALUES ($1, $2) RETURNING *',
@@ -21,6 +24,7 @@ export default async function handler(req, res) {
         } catch (err) {
             res.status(500).json({ erro: 'Erro ao cadastrar usuário', detalhe: err.message });
         }
+
     } else if (req.method === 'GET') {
         const { email, senha } = req.query;
 
@@ -36,7 +40,10 @@ export default async function handler(req, res) {
                 res.status(401).json({ autenticado: false });
             }
         } catch (err) {
-            res.status(500).json({ erro: 'Erro ao buscar usuário' });
+            res.status(500).json({ erro: 'Erro ao buscar usuário', detalhe: err.message });
         }
+
+    } else {
+        res.status(405).json({ erro: 'Método não permitido' });
     }
 }
