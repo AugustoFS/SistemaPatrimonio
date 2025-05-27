@@ -19,7 +19,14 @@ const Home = () => {
         try {
             const res = await fetch('/api/produtos');
             const data = await res.json();
-            setProdutos(data);
+            // Garante que 'data' seja um array, caso a API retorne objeto ou algo inesperado
+            if (Array.isArray(data)) {
+                setProdutos(data);
+            } else {
+                // Se não for array, reseta para array vazio
+                setProdutos([]);
+                setError('Resposta inesperada da API');
+            }
         } catch {
             setError('Erro ao buscar produtos');
         }
@@ -71,7 +78,7 @@ const Home = () => {
             {/* Sidebar */}
             <aside className="sidebar">
                 <h3>Menu</h3>
-                {/* Aqui pode colocar links futuros */}
+                {/* Links futuros */}
             </aside>
 
             {/* Conteúdo principal */}
