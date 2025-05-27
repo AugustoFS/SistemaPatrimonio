@@ -60,15 +60,17 @@ const Home = () => {
                 return;
             }
 
-            setShowCard(false);
             setForm({ nome: '', valor: '', status: '', localizacao: '', aquisicao: '' });
-            fetchProdutos();
+            setShowCard(false);
+
+            await fetchProdutos();   // ✅ Aguarde a atualização!
         } catch {
             setError('Erro ao cadastrar produto');
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
     };
+
 
     return (
         <div className="home-container">
