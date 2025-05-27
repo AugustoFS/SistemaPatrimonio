@@ -19,7 +19,7 @@ export default async function handler(req, res) {
                  VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
                 [nome, valor, status, localizacao, aquisicao, usuario_id]
             );
-            return res.status(201).json(result.rows[0]);  // Retorno direto do produto
+            return res.status(201).json(result.rows[0]);
         } catch (err) {
             return res.status(500).json({ erro: 'Erro ao cadastrar produto', detalhe: err.message });
         }
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
                 `SELECT * FROM produtos WHERE usuario_id = $1 ORDER BY id DESC`,
                 [usuario_id]
             );
-            return res.status(200).json(result.rows);  // Retorno direto do array
+            return res.status(200).json(result.rows);
         } catch (err) {
             return res.status(500).json({ erro: 'Erro ao buscar produtos', detalhe: err.message });
         }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
-const Home = () => {
+const Home = ({ usuarioId }) => {  // Recebe o usuarioId via props
     const [produtos, setProdutos] = useState([]);
     const [showCard, setShowCard] = useState(false);
     const [form, setForm] = useState({
@@ -14,16 +14,20 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    // Buscar produtos da API
+    // Buscar produtos da API com usuario_id
     const fetchProdutos = async () => {
+        if (!usuarioId) {
+            setError('Usuário não autenticado');
+            return;
+        }
+
         try {
-            const res = await fetch('/api/produtos');
+            const res = await fetch(`/api/produtos?usuario_id=${usuarioId}`);
             const data = await res.json();
-            // Garante que 'data' seja um array, caso a API retorne objeto ou algo inesperado
             if (Array.isArray(data)) {
                 setProdutos(data);
+                setError('');
             } else {
-                // Se não for array, reseta para array vazio
                 setProdutos([]);
                 setError('Resposta inesperada da API');
             }
@@ -34,7 +38,7 @@ const Home = () => {
 
     useEffect(() => {
         fetchProdutos();
-    }, []);
+    }, [usuarioId]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -46,11 +50,17 @@ const Home = () => {
         setLoading(true);
         setError('');
 
+        if (!usuarioId) {
+            setError('Usuário não autenticado');
+            setLoading(false);
+            return;
+        }
+
         try {
             const res = await fetch('/api/produtos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(form),
+                body: JSON.stringify({ ...form, usuario_id: usuarioId }),  // envia usuario_id junto
             });
 
             if (!res.ok) {
@@ -63,7 +73,7 @@ const Home = () => {
             setForm({ nome: '', valor: '', status: '', localizacao: '', aquisicao: '' });
             setShowCard(false);
 
-            await fetchProdutos();   // ✅ Aguarde a atualização!
+            await fetchProdutos(); // Atualiza lista após cadastro
         } catch {
             setError('Erro ao cadastrar produto');
         } finally {
@@ -71,19 +81,14 @@ const Home = () => {
         }
     };
 
-
     return (
         <div className="home-container">
-            {/* Header vazio */}
             <header className="header"></header>
 
-            {/* Sidebar */}
             <aside className="sidebar">
                 <h3>Menu</h3>
-                {/* Links futuros */}
             </aside>
 
-            {/* Conteúdo principal */}
             <main className="main-content">
                 <div className="table-header">
                     <h2>Produtos</h2>
@@ -127,13 +132,9 @@ const Home = () => {
                     </tbody>
                 </table>
 
-                {/* Card modal para cadastro */}
                 {showCard && (
                     <div className="modal-overlay" onClick={() => setShowCard(false)}>
-                        <div
-                            className="modal-card"
-                            onClick={(e) => e.stopPropagation()}
-                        >
+                        <div className="modal-card" onClick={(e) => e.stopPropagation()}>
                             <h3>Adicionar Produto</h3>
                             <form onSubmit={handleSubmit} className="form">
                                 <input
