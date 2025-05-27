@@ -1,79 +1,91 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './App.css';
 
 const Home = () => {
-    const navigate = useNavigate();
     const [produtos, setProdutos] = useState([]);
-    const [showForm, setShowForm] = useState(false);
-    const [formData, setFormData] = useState({
+    const [showCard, setShowCard] = useState(false);
+    const [form, setForm] = useState({
         nome: '',
         valor: '',
         status: '',
         localizacao: '',
         aquisicao: '',
     });
-    const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    // Buscar produtos da API
+    const fetchProdutos = async () => {
+        try {
+            const res = await fetch('/api/produtos');
+            const data = await res.json();
+            setProdutos(data);
+        } catch {
+            setError('Erro ao buscar produtos');
+        }
+    };
 
     useEffect(() => {
         fetchProdutos();
     }, []);
 
-    const fetchProdutos = () => {
-        fetch('/api/produtos')
-            .then((res) => res.json())
-            .then((data) => setProdutos(data))
-            .catch((err) => console.error('Erro ao buscar produtos:', err));
-    };
-
     const handleInputChange = (e) => {
-        setFormData((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
+        const { name, value } = e.target;
+        setForm((f) => ({ ...f, [name]: value }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError('');
 
-        // Aqui você pode adicionar validações básicas, se quiser
         try {
             const res = await fetch('/api/produtos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(form),
             });
 
             if (!res.ok) {
-                const error = await res.json();
-                setMessage(`Erro: ${error.erro || 'Falha ao cadastrar produto'}`);
+                const errData = await res.json();
+                setError(errData.erro || 'Erro ao cadastrar produto');
+                setLoading(false);
                 return;
             }
 
-            setMessage('Produto cadastrado com sucesso!');
-            setFormData({
-                nome: '',
-                valor: '',
-                status: '',
-                localizacao: '',
-                aquisicao: '',
-            });
-            setShowForm(false);
-            fetchProdutos(); // Atualiza a lista após cadastro
-        } catch (error) {
-            setMessage('Erro ao cadastrar produto.');
-            console.error(error);
+            setShowCard(false);
+            setForm({ nome: '', valor: '', status: '', localizacao: '', aquisicao: '' });
+            fetchProdutos();
+        } catch {
+            setError('Erro ao cadastrar produto');
         }
+
+        setLoading(false);
     };
 
     return (
-        <div className="container">
-            <h2>Lista de Produtos</h2>
+        <div className="home-container">
+            {/* Header vazio */}
+            <header className="header"></header>
 
-            {produtos.length === 0 ? (
-                <p>Nenhum produto cadastrado.</p>
-            ) : (
-                <table className="tabela">
+            {/* Sidebar */}
+            <aside className="sidebar">
+                <h3>Menu</h3>
+                {/* Aqui pode colocar links futuros */}
+            </aside>
+
+            {/* Conteúdo principal */}
+            <main className="main-content">
+                <div className="table-header">
+                    <h2>Produtos</h2>
+                    <button className="button" onClick={() => setShowCard(true)}>
+                        Adicionar
+                    </button>
+                </div>
+
+                {error && <p className="error">{error}</p>}
+
+                <table className="produtos-table">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -85,82 +97,93 @@ const Home = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {produtos.map((produto) => (
-                            <tr key={produto.id}>
-                                <td>{produto.id}</td>
-                                <td>{produto.nome}</td>
-                                <td>R$ {produto.valor}</td>
-                                <td>{produto.status}</td>
-                                <td>{produto.localizacao}</td>
-                                <td>{new Date(produto.aquisicao).toLocaleDateString()}</td>
+                        {produtos.length === 0 ? (
+                            <tr>
+                                <td colSpan="6" style={{ textAlign: 'center' }}>
+                                    Nenhum produto cadastrado.
+                                </td>
                             </tr>
-                        ))}
+                        ) : (
+                            produtos.map((p) => (
+                                <tr key={p.id}>
+                                    <td>{p.id}</td>
+                                    <td>{p.nome}</td>
+                                    <td>R$ {Number(p.valor).toFixed(2)}</td>
+                                    <td>{p.status}</td>
+                                    <td>{p.localizacao}</td>
+                                    <td>{new Date(p.aquisicao).toLocaleDateString()}</td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
-            )}
 
-            <button className="button" onClick={() => setShowForm(!showForm)}>
-                {showForm ? 'Cancelar cadastro' : 'Cadastrar Produto'}
-            </button>
-
-            {showForm && (
-                <form onSubmit={handleSubmit} className="form" style={{ marginTop: 20 }}>
-                    <input
-                        type="text"
-                        name="nome"
-                        placeholder="Nome"
-                        value={formData.nome}
-                        onChange={handleInputChange}
-                        required
-                        className="input"
-                    />
-                    <input
-                        type="number"
-                        step="0.01"
-                        name="valor"
-                        placeholder="Valor"
-                        value={formData.valor}
-                        onChange={handleInputChange}
-                        required
-                        className="input"
-                    />
-                    <input
-                        type="text"
-                        name="status"
-                        placeholder="Status"
-                        value={formData.status}
-                        onChange={handleInputChange}
-                        required
-                        className="input"
-                    />
-                    <input
-                        type="text"
-                        name="localizacao"
-                        placeholder="Localização"
-                        value={formData.localizacao}
-                        onChange={handleInputChange}
-                        required
-                        className="input"
-                    />
-                    <input
-                        type="date"
-                        name="aquisicao"
-                        placeholder="Aquisição"
-                        value={formData.aquisicao}
-                        onChange={handleInputChange}
-                        required
-                        className="input"
-                    />
-                    <button type="submit" className="button">
-                        Salvar Produto
-                    </button>
-                    {message && <p className="message">{message}</p>}
-                </form>
-            )}
-
-            <button className="button" onClick={() => navigate('/')}>
-                Voltar para Login
-            </button>
+                {/* Card modal para cadastro */}
+                {showCard && (
+                    <div className="modal-overlay" onClick={() => setShowCard(false)}>
+                        <div
+                            className="modal-card"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <h3>Adicionar Produto</h3>
+                            <form onSubmit={handleSubmit} className="form">
+                                <input
+                                    name="nome"
+                                    type="text"
+                                    placeholder="Nome"
+                                    value={form.nome}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                <input
+                                    name="valor"
+                                    type="number"
+                                    step="0.01"
+                                    placeholder="Valor"
+                                    value={form.valor}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                <input
+                                    name="status"
+                                    type="text"
+                                    placeholder="Status"
+                                    value={form.status}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                <input
+                                    name="localizacao"
+                                    type="text"
+                                    placeholder="Localização"
+                                    value={form.localizacao}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                <input
+                                    name="aquisicao"
+                                    type="date"
+                                    value={form.aquisicao}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                                <div className="form-buttons">
+                                    <button type="submit" disabled={loading} className="button">
+                                        {loading ? 'Salvando...' : 'Salvar'}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowCard(false)}
+                                        className="button cancel-button"
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+            </main>
         </div>
     );
 };
