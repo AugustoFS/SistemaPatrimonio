@@ -20,7 +20,7 @@ export default async function handler(req, res) {
                 'INSERT INTO usuarios (email, senha) VALUES ($1, $2) RETURNING *',
                 [email, senha]
             );
-            res.status(200).json({ usuario: result.rows[0] });
+            res.status(200).json({ usuario_id: result.rows[0].id });
         } catch (err) {
             res.status(500).json({ erro: 'Erro ao cadastrar usuário', detalhe: err.message });
         }
@@ -35,10 +35,11 @@ export default async function handler(req, res) {
             );
 
             if (result.rows.length > 0) {
-                res.status(200).json({ autenticado: true });
+                res.status(200).json({ autenticado: true, usuario_id: result.rows[0].id });
             } else {
                 res.status(401).json({ autenticado: false });
             }
+
         } catch (err) {
             res.status(500).json({ erro: 'Erro ao buscar usuário', detalhe: err.message });
         }

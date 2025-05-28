@@ -60,7 +60,7 @@ const Home = ({ usuarioId }) => {  // Recebe o usuarioId via props
             const res = await fetch('/api/produtos', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...form, usuario_id: usuarioId }),  // envia usuario_id junto
+                body: JSON.stringify({ ...form, usuario_id: usuarioId }), // envia usuario_id junto
             });
 
             if (!res.ok) {

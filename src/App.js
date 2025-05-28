@@ -44,7 +44,7 @@ const App = () => {
       if (isLogin) {
         if (data.autenticado) {
           setMessage('');
-          setUsuarioId(data.usuario_id); // armazena o ID retornado da API
+          setUsuarioId(data.usuario_id); // precisa existir no backend!
           navigate('/home', { state: { usuarioId: data.usuario_id } });
         } else {
           setMessage('Credenciais inválidas!');
@@ -52,7 +52,7 @@ const App = () => {
       } else {
         if (response.ok) {
           setMessage('');
-          setUsuarioId(data.usuario_id); // armazena id do usuário cadastrado
+          setUsuarioId(data.usuario_id); // precisa existir no backend!
           navigate('/home', { state: { usuarioId: data.usuario_id } });
         } else {
           setMessage(data.erro || 'Erro ao cadastrar usuário.');
