@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate, Routes, Route } from 'react-router-dom';
+import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './Home'; // importe o Home aqui
 import './App.css';
+
+// Componente auxiliar para pegar o estado enviado na navegação e passar para Home
+const HomeWithUser = () => {
+  const location = useLocation();
+  const usuarioId = location.state?.usuarioId || null;
+  return <Home usuarioId={usuarioId} />;
+};
 
 const App = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -95,23 +102,9 @@ const App = () => {
           </div>
         }
       />
-
-      <Route
-        path="/home"
-        element={<HomeWithUser />}
-      />
+      <Route path="/home" element={<HomeWithUser />} />
     </Routes>
   );
-};
-
-// Componente auxiliar para pegar o estado enviado na navegação e passar para Home
-import { useLocation } from 'react-router-dom';
-
-const HomeWithUser = () => {
-  const location = useLocation();
-  const usuarioId = location.state?.usuarioId || null;
-
-  return <Home usuarioId={usuarioId} />;
 };
 
 export default App;
