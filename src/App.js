@@ -1,23 +1,17 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import Login from './components/Login';
-import Cadastro from './components/Cadastro';
-import Home from './components/Home';
+import './App.css';
+import TabelaProdutos from './components/TabelaProdutos';
 
-const HomeWithUser = () => {
-  const location = useLocation();
-  const usuarioId = location.state?.usuarioId || null;
-  return <Home usuarioId={usuarioId} />;
-};
-
-const App = () => {
+function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/cadastro" element={<Cadastro />} />
-      <Route path="/home" element={<HomeWithUser />} />
-    </Routes>
+    <div className="home-container">
+      <div className="sidebar">
+        <h3>Sistema de Patrimônio</h3>
+      </div>
+      <div className="header"></div>
+      <TabelaProdutos />
+    </div>
   );
-};
+}
 
 export default App;
