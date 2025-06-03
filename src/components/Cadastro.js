@@ -1,4 +1,3 @@
-// src/components/Cadastro.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
@@ -22,8 +21,8 @@ const Cadastro = ({ onCadastroSuccess }) => {
             const data = await response.json();
 
             if (response.ok) {
-                onCadastroSuccess(data.usuario_id);
-                navigate('/produtos');
+                onCadastroSuccess(data.usuario_id); // chama função do App para atualizar estado
+                navigate('/produtos');               // redireciona para produtos
             } else {
                 setMessage(data.erro || 'Erro ao cadastrar usuário.');
             }

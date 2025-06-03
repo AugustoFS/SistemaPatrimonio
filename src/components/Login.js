@@ -1,4 +1,3 @@
-// src/components/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
@@ -17,8 +16,8 @@ const Login = ({ onLoginSuccess }) => {
             const data = await response.json();
 
             if (data.autenticado) {
-                onLoginSuccess(data.usuario_id);
-                navigate('/produtos');
+                onLoginSuccess(data.usuario_id);  // chama função do App para atualizar estado
+                navigate('/produtos');             // redireciona para produtos
             } else {
                 setMessage('Credenciais inválidas!');
             }
