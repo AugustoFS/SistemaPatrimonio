@@ -1,7 +1,8 @@
+// src/components/TabelaProdutos.jsx
 import React, { useState } from 'react';
 import '../App.css';
 
-function TabelaProdutos() {
+function TabelaProdutos({ usuarioId }) {
     const [produtos, setProdutos] = useState([]);
     const [modalAberto, setModalAberto] = useState(false);
     const [produtoAtual, setProdutoAtual] = useState({ id: '', nome: '', valor: '', condicao: '', localizacao: '', aquisicao: '' });
@@ -129,11 +130,11 @@ function TabelaProdutos() {
                                 value={produtoAtual.aquisicao}
                                 onChange={handleInputChange}
                             />
+                        </div>
 
-                            <div className="form-buttons">
-                                <button className="button" onClick={salvarProduto}>Salvar</button>
-                                <button className="button cancel-button" onClick={fecharModal}>Cancelar</button>
-                            </div>
+                        <div style={{ marginTop: '10px', textAlign: 'right' }}>
+                            <button className="button" onClick={salvarProduto}>Salvar</button>
+                            <button className="button cancel-button" onClick={fecharModal}>Cancelar</button>
                         </div>
                     </div>
                 </div>

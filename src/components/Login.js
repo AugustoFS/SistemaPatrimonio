@@ -1,9 +1,9 @@
+// src/components/Login.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
-
-const Login = () => {
+const Login = ({ onLoginSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -17,7 +17,8 @@ const Login = () => {
             const data = await response.json();
 
             if (data.autenticado) {
-                navigate('/home', { state: { usuarioId: data.usuario_id } });
+                onLoginSuccess(data.usuario_id);
+                navigate('/produtos');
             } else {
                 setMessage('Credenciais inválidas!');
             }
