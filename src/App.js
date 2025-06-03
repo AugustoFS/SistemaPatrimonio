@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import '../App.css';
 import TabelaProdutos from './components/TabelaProdutos';
 
 function App() {
