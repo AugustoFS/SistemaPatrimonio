@@ -1,36 +1,46 @@
 /* App.css */
+
+/* Container de Login/Cadastro */
 .container {
   max-width: 400px;
   margin: 50px auto;
-  padding: 20px;
+  padding: 30px;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 12px;
   text-align: center;
-  font-family: sans-serif;
-  background-color: #f9f9f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .input {
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.3s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #4caf50;
 }
 
 .button {
-  padding: 10px;
-  font-size: 16px;
+  padding: 12px;
+  font-size: 15px;
   background-color: #4caf50;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .button:hover {
@@ -38,27 +48,29 @@
 }
 
 .toggle {
-  margin-top: 10px;
+  margin-top: 12px;
   background: none;
   border: none;
-  color: blue;
+  color: #007bff;
   cursor: pointer;
   text-decoration: underline;
+  font-size: 14px;
 }
 
 .message {
-  margin-top: 10px;
+  margin-top: 12px;
   color: #333;
+  font-size: 14px;
 }
 
 /* Container geral com sidebar e main */
 .home-container {
   display: flex;
   height: 100vh;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Header vazio no topo */
+/* Header */
 .header {
   position: fixed;
   top: 0;
@@ -66,25 +78,31 @@
   /* largura da sidebar */
   right: 0;
   height: 60px;
-  background: white;
+  background: #ffffff;
   border-bottom: 1px solid #ddd;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
 }
 
-/* Sidebar esquerda fixa */
+/* Sidebar */
 .sidebar {
   width: 200px;
   background: #2c3e50;
-  color: white;
+  color: #ecf0f1;
   padding: 20px;
   height: 100vh;
   box-sizing: border-box;
   position: fixed;
   top: 0;
   left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* Main content com margin left da sidebar e padding top do header */
+/* Main content */
 .main-content {
   margin-left: 200px;
   margin-top: 60px;
@@ -93,12 +111,12 @@
   overflow-y: auto;
 }
 
-/* Cabeçalho da tabela com botão */
+/* Cabeçalho da tabela */
 .table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 /* Tabela */
@@ -110,12 +128,13 @@
 .produtos-table th,
 .produtos-table td {
   border: 1px solid #ccc;
-  padding: 8px;
+  padding: 10px;
   text-align: left;
 }
 
 .produtos-table th {
-  background-color: #f4f4f4;
+  background-color: #f0f0f0;
+  font-weight: bold;
 }
 
 /* Botões */
@@ -123,10 +142,11 @@
   background-color: #4caf50;
   border: none;
   color: white;
-  padding: 8px 12px;
+  padding: 8px 14px;
   font-size: 14px;
   cursor: pointer;
   border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
 .button:hover {
@@ -157,18 +177,20 @@
 
 .modal-card {
   background: white;
-  padding: 20px;
+  padding: 24px;
   border-radius: 8px;
-  width: 320px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  width: 350px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .form input {
   width: 100%;
   margin-bottom: 12px;
-  padding: 8px;
+  padding: 10px;
   box-sizing: border-box;
   font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .form-buttons {
@@ -177,6 +199,7 @@
 }
 
 .error {
-  color: red;
+  color: #e74c3c;
   margin-bottom: 10px;
+  font-size: 13px;
 }
