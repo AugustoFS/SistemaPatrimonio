@@ -2,7 +2,7 @@ import pool from '../../lib/db'; // ou o caminho correto do seu pool de conexão
 
 export default async function handler(req, res) {
     // 🔐 CORS Headers (ajuste origin conforme necessário)
-    res.setHeader('Access-Control-Allow-Origin', 'https://sistema-patrimonio.vercel.app');
+    res.setHeader('Access-Control-Allow-Origin', 'https://sistema-patrimonio-bufj9fhem-augustofss-projects.vercel.app/api/produtos');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Credentials', 'true'); // se usar cookies/sessão
