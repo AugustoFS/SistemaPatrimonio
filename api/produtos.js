@@ -1,11 +1,14 @@
-import { Pool } from 'pg';
-
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
-});
-
 export default async function handler(req, res) {
+    // Permitir CORS
+    res.setHeader('Access-Control-Allow-Origin', '*'); // Ou coloque o domínio do frontend em vez de '*'
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Para requisições OPTIONS (preflight) retornar 200 direto
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     if (req.method === 'POST') {
         const { nome, valor, status, localizacao, aquisicao, usuario_id } = req.body;
 

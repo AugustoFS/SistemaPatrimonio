@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
 
-const API_URL = 'https://sistema-patrimonio-bufj9fhem-augustofss-projects.vercel.app/api/produtos'; // <== ALTERE para sua URL real
+const API_URL = 'https://sistema-patrimonio-bufj9fhem-augustofss-projects.vercel.app/api/produtos'; // URL base da API
 
 function TabelaProdutos({ usuarioId }) {
     const [produtos, setProdutos] = useState([]);
@@ -14,7 +14,7 @@ function TabelaProdutos({ usuarioId }) {
     useEffect(() => {
         if (!usuarioId) return;
 
-        fetch(`${API_URL}/produtos?usuarioId=${usuarioId}`)
+        fetch(`${API_URL}?usuario_id=${usuarioId}`)
             .then(res => res.json())
             .then(data => {
                 setProdutos(data);
@@ -50,9 +50,10 @@ function TabelaProdutos({ usuarioId }) {
         }
 
         const metodo = editando ? 'PUT' : 'POST';
-        const url = editando ? `${API_URL}/produtos/${id}` : `${API_URL}/produtos`;
+        const url = editando ? `${API_URL}/${id}` : API_URL;
 
-        const corpo = { ...produtoAtual, usuarioId };
+        // Use "usuario_id" no corpo para corresponder ao backend
+        const corpo = { ...produtoAtual, usuario_id: usuarioId };
 
         fetch(url, {
             method: metodo,
@@ -65,10 +66,8 @@ function TabelaProdutos({ usuarioId }) {
             })
             .then(produtoSalvo => {
                 if (editando) {
-                    // Atualiza o produto na lista
                     setProdutos(produtos.map(p => (p.id === produtoSalvo.id ? produtoSalvo : p)));
                 } else {
-                    // Adiciona o novo produto à lista
                     setProdutos([...produtos, produtoSalvo]);
                 }
                 fecharModal();
@@ -77,7 +76,7 @@ function TabelaProdutos({ usuarioId }) {
     };
 
     const excluirProduto = (id) => {
-        fetch(`${API_URL}/produtos/${id}`, { method: 'DELETE' })
+        fetch(`${API_URL}/${id}`, { method: 'DELETE' })
             .then(res => {
                 if (!res.ok) throw new Error('Erro ao excluir produto');
                 setProdutos(produtos.filter(p => p.id !== id));
