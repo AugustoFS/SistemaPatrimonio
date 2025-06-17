@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
 
-const API_URL = 'https://sistema-patrimonio-bufj9fhem-augustofss-projects.vercel.app/api/produtos'; // URL base da API
+const API_URL = 'https://sistema-patrimonio.vercel.app'; // URL base da API
 
 function TabelaProdutos({ usuarioId }) {
     const [produtos, setProdutos] = useState([]);
