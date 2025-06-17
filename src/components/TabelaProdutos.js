@@ -1,6 +1,7 @@
-// src/components/TabelaProdutos.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../App.css';
+
+const API_URL = 'https://sistema-patrimonio.vercel.app/produtos'; // <== ALTERE para sua URL real
 
 function TabelaProdutos({ usuarioId }) {
     const [produtos, setProdutos] = useState([]);
@@ -8,6 +9,18 @@ function TabelaProdutos({ usuarioId }) {
     const [produtoAtual, setProdutoAtual] = useState({ id: '', nome: '', valor: '', condicao: '', localizacao: '', aquisicao: '' });
     const [editando, setEditando] = useState(false);
     const [erro, setErro] = useState('');
+
+    // Buscar produtos do usuário ao carregar ou quando usuarioId mudar
+    useEffect(() => {
+        if (!usuarioId) return;
+
+        fetch(`${API_URL}/produtos?usuarioId=${usuarioId}`)
+            .then(res => res.json())
+            .then(data => {
+                setProdutos(data);
+            })
+            .catch(() => setProdutos([]));
+    }, [usuarioId]);
 
     const abrirModal = (produto = { id: '', nome: '', valor: '', condicao: '', localizacao: '', aquisicao: '' }) => {
         setProdutoAtual(produto);
@@ -29,22 +42,47 @@ function TabelaProdutos({ usuarioId }) {
     };
 
     const salvarProduto = () => {
-        const { nome, valor, condicao, localizacao, aquisicao } = produtoAtual;
+        const { nome, valor, condicao, localizacao, aquisicao, id } = produtoAtual;
+
         if (!nome || !valor || !condicao || !localizacao || !aquisicao) {
             setErro('Todos os campos são obrigatórios.');
             return;
         }
 
-        if (editando) {
-            setProdutos(produtos.map(p => (p.id === produtoAtual.id ? produtoAtual : p)));
-        } else {
-            setProdutos([...produtos, { ...produtoAtual, id: Date.now() }]);
-        }
-        fecharModal();
+        const metodo = editando ? 'PUT' : 'POST';
+        const url = editando ? `${API_URL}/produtos/${id}` : `${API_URL}/produtos`;
+
+        const corpo = { ...produtoAtual, usuarioId };
+
+        fetch(url, {
+            method: metodo,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(corpo),
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('Erro ao salvar produto');
+                return res.json();
+            })
+            .then(produtoSalvo => {
+                if (editando) {
+                    // Atualiza o produto na lista
+                    setProdutos(produtos.map(p => (p.id === produtoSalvo.id ? produtoSalvo : p)));
+                } else {
+                    // Adiciona o novo produto à lista
+                    setProdutos([...produtos, produtoSalvo]);
+                }
+                fecharModal();
+            })
+            .catch(() => setErro('Erro ao salvar produto. Tente novamente.'));
     };
 
     const excluirProduto = (id) => {
-        setProdutos(produtos.filter(p => p.id !== id));
+        fetch(`${API_URL}/produtos/${id}`, { method: 'DELETE' })
+            .then(res => {
+                if (!res.ok) throw new Error('Erro ao excluir produto');
+                setProdutos(produtos.filter(p => p.id !== id));
+            })
+            .catch(() => alert('Erro ao excluir produto. Tente novamente.'));
     };
 
     return (
