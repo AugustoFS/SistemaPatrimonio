@@ -1,14 +1,18 @@
-export default async function handler(req, res) {
-    // Permitir CORS
-    res.setHeader('Access-Control-Allow-Origin', '*'); // Ou coloque o domínio do frontend em vez de '*'
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+import pool from '../../lib/db'; // ou o caminho correto do seu pool de conexão
 
-    // Para requisições OPTIONS (preflight) retornar 200 direto
+export default async function handler(req, res) {
+    // 🔐 CORS Headers (ajuste origin conforme necessário)
+    res.setHeader('Access-Control-Allow-Origin', 'https://sistema-patrimonio.vercel.app');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true'); // se usar cookies/sessão
+
+    // ⚙️ Tratar requisição preflight (OPTIONS)
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
+    // POST: Criar produto
     if (req.method === 'POST') {
         const { nome, valor, status, localizacao, aquisicao, usuario_id } = req.body;
 
@@ -28,6 +32,7 @@ export default async function handler(req, res) {
         }
     }
 
+    // GET: Listar produtos por usuário
     if (req.method === 'GET') {
         const { usuario_id } = req.query;
 
@@ -46,5 +51,41 @@ export default async function handler(req, res) {
         }
     }
 
+    // PUT: Atualizar produto
+    if (req.method === 'PUT') {
+        const { id, nome, valor, status, localizacao, aquisicao } = req.body;
+
+        if (!id || !nome || !valor || !status || !localizacao || !aquisicao) {
+            return res.status(400).json({ erro: 'Todos os campos são obrigatórios para atualização.' });
+        }
+
+        try {
+            const result = await pool.query(
+                `UPDATE produtos SET nome = $1, valor = $2, status = $3, localizacao = $4, aquisicao = $5 WHERE id = $6 RETURNING *`,
+                [nome, valor, status, localizacao, aquisicao, id]
+            );
+            return res.status(200).json(result.rows[0]);
+        } catch (err) {
+            return res.status(500).json({ erro: 'Erro ao atualizar produto', detalhe: err.message });
+        }
+    }
+
+    // DELETE: Remover produto
+    if (req.method === 'DELETE') {
+        const { id } = req.query;
+
+        if (!id) {
+            return res.status(400).json({ erro: 'ID do produto é obrigatório para exclusão.' });
+        }
+
+        try {
+            await pool.query(`DELETE FROM produtos WHERE id = $1`, [id]);
+            return res.status(204).end();
+        } catch (err) {
+            return res.status(500).json({ erro: 'Erro ao excluir produto', detalhe: err.message });
+        }
+    }
+
+    // Método não permitido
     return res.status(405).json({ erro: 'Método não permitido' });
 }
