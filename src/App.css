@@ -30,11 +30,12 @@ html,
   color: rgb(52, 52, 52);
   background-color: #ffffff;
   padding-left: 20%;
+  border-right: #333;
 }
 
 .lado-esquerdo h1 {
   align-content: center;
-  font-size: 2.9em;
+  font-size: 3em;
   text-align: center;
   line-height: 1.3;
 }

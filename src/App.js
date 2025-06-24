@@ -24,7 +24,7 @@ function App() {
     <div className="tela-inicial">
       {!isLoggedIn && (
         <div className="lado-esquerdo" style={{ textAlign: 'center', marginBottom: '10px' }}>
-          <h1>Sistema de<br />Bens e Patrimônios</h1>
+          <h1>Gerenciador de<br />Bens e Patrimônios</h1>
         </div>
       )}
 
