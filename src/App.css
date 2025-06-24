@@ -21,7 +21,6 @@ html,
 
 /* Lado esquerdo (só visível sem login) */
 .lado-esquerdo {
-  font-family: 'Times New Roman', Times, serif;
   flex: 1;
   display: flex;
   justify-content: center;
@@ -30,7 +29,7 @@ html,
   color: rgb(52, 52, 52);
   background-color: #ffffff;
   padding-left: 20%;
-  border-right: #333;
+  border-right: #333 solid 1px;
 }
 
 .lado-esquerdo h1 {
