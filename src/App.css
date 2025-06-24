@@ -26,10 +26,10 @@ html,
   justify-content: center;
   align-items: center;
   /* Removida a borda central */
-  color: rgb(52, 52, 52);
+  border-radius: 15px;
   background-color: #ffffff;
   padding-left: 20%;
-  border-right: #333 solid 1px;
+  border-right: #33333327 solid 1px;
 }
 
 .lado-esquerdo h1 {
@@ -42,7 +42,8 @@ html,
 /* Lado direito onde fica o conteúdo principal */
 .lado-direito {
   flex: 1;
-  padding: 40px;
+  padding: 20px;
+  padding-right: 40px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
