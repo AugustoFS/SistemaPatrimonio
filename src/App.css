@@ -72,7 +72,6 @@ html,
   border-radius: 12px;
   text-align: center;
   background-color: #ffffff;
-  
   color: #333333;
   /* cinza escuro */
   font-size: 18px;
@@ -226,4 +225,9 @@ html,
   color: #e74c3c;
   margin-bottom: 10px;
   font-size: 13px;
+}
+
+.h1{
+  text-align: justify;
+  font-size: 34px;
 }
