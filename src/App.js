@@ -21,24 +21,17 @@ function App() {
   };
 
   return (
-    <div className="home-container" style={{ display: 'flex', minHeight: '100vh' }}>
+    <div className="tela-inicial">
       {!isLoggedIn && (
-        <div style={{
-          width: '250px',
-          padding: '20px',
-          backgroundColor: '#f0f0f0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <h2 style={{ textAlign: 'center' }}>Sistema de Bens e Patrimônios</h2>
+        <div className="lado-esquerdo">
+          <h1>Sistema de<br />Bens e Patrimônios</h1>
         </div>
       )}
 
-      <div style={{ flex: 1, padding: '20px' }}>
+      <div className="lado-direito">
         {isLoggedIn && (
           <div style={{ textAlign: 'right', marginBottom: '10px' }}>
-            <button onClick={handleLogout}>Sair</button>
+            <button className="botao-sair" onClick={handleLogout}>Sair</button>
           </div>
         )}
 
