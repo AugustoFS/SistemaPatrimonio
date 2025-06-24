@@ -27,8 +27,7 @@ html,
   align-items: center;
   /* Removida a borda central */
   background-color: #ffffff;
-  padding-left: 20%;
-  padding-bottom: 9%;
+  padding: 10%;
   border-right: #33333327 solid 1px;
 }
 
@@ -231,7 +230,7 @@ html,
   font-size: 13px;
 }
 
-.h1{
+.h1 {
   text-align: justify;
   font-size: 60px;
 }
