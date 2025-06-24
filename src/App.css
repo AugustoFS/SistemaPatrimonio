@@ -28,6 +28,7 @@ html,
   /* Removida a borda central */
   color: navy;
   background-color: #ffffff;
+  padding-left: 128px;
 }
 
 .lado-esquerdo h1 {
