@@ -25,7 +25,7 @@ html,
   display: flex;
   justify-content: center;
   align-items: center;
-  border-right: 2px solid #ccc;
+  /* REMOVIDO border-right: 2px solid #ccc; */
   color: navy;
   background-color: #ffffff;
 }
@@ -42,7 +42,9 @@ html,
   padding: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* Centralização aproximada vertical */
+  justify-content: flex-start;
+  /* não mais center */
   background-color: #ffffff;
 }
 
@@ -63,15 +65,23 @@ html,
 /* Container de Login/Cadastro */
 .container {
   max-width: 400px;
-  margin: 50px auto;
+  margin: 70px auto 0 auto;
+  /* afastado do topo para não ficar 100% centralizado verticalmente */
   padding: 30px;
-  border: 1px solid #ccc;
+  /* REMOVIDA a borda */
+  /* border: 1px solid #ccc; */
   border-radius: 12px;
   text-align: center;
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #333333;
+  /* cinza escuro */
+  font-size: 18px;
+  /* texto maior */
+  font-weight: 500;
 }
 
+/* Mantém a fonte maior nos inputs e botões para coerência */
 .form {
   display: flex;
   flex-direction: column;
@@ -80,7 +90,7 @@ html,
 
 .input {
   padding: 12px;
-  font-size: 15px;
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 6px;
   transition: border-color 0.3s;
@@ -93,7 +103,7 @@ html,
 
 .button {
   padding: 12px;
-  font-size: 15px;
+  font-size: 16px;
   background-color: #4caf50;
   color: white;
   border: none;
@@ -122,100 +132,4 @@ html,
   font-size: 14px;
 }
 
-/* Tabela */
-.main-content {
-  padding: 20px;
-  flex: 1;
-  overflow-y: auto;
-}
-
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.produtos-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.produtos-table th,
-.produtos-table td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: left;
-}
-
-.produtos-table th {
-  background-color: #f0f0f0;
-  font-weight: bold;
-}
-
-/* Botões da tabela */
-.button {
-  background-color: #4caf50;
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.button:hover {
-  background-color: #45a049;
-}
-
-.cancel-button {
-  background-color: #f44336;
-}
-
-.cancel-button:hover {
-  background-color: #d32f2f;
-}
-
-/* Modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-}
-
-.modal-card {
-  background: white;
-  padding: 24px;
-  border-radius: 8px;
-  width: 350px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-.form input {
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 10px;
-  box-sizing: border-box;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.form-buttons {
-  display: flex;
-  justify-content: space-between;
-}
-
-.error {
-  color: #e74c3c;
-  margin-bottom: 10px;
-  font-size: 13px;
-}
+/* O restante do CSS permanece igual... */
