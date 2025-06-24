@@ -26,9 +26,9 @@ html,
   justify-content: center;
   align-items: center;
   /* Removida a borda central */
-  border-radius: 15px;
   background-color: #ffffff;
   padding-left: 20%;
+  padding-bottom: 9%;
   border-right: #33333327 solid 1px;
 }
 
