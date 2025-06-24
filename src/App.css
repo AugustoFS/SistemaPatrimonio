@@ -25,7 +25,7 @@ html,
   display: flex;
   justify-content: center;
   align-items: center;
-  border-right: 2px solid #ccc;
+  /* Removida a borda central */
   color: navy;
   background-color: #ffffff;
 }
@@ -42,7 +42,8 @@ html,
   padding: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  /* não centraliza verticalmente */
   background-color: #ffffff;
 }
 
@@ -63,13 +64,20 @@ html,
 /* Container de Login/Cadastro */
 .container {
   max-width: 400px;
-  margin: 50px auto;
+  margin: 70px auto 0 auto;
+  /* afastado do topo */
   padding: 30px;
-  border: 1px solid #ccc;
+  /* Borda removida */
+  /* border: 1px solid #ccc; */
   border-radius: 12px;
   text-align: center;
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #333333;
+  /* cinza escuro */
+  font-size: 18px;
+  /* texto maior */
+  font-weight: 500;
 }
 
 .form {
@@ -80,7 +88,7 @@ html,
 
 .input {
   padding: 12px;
-  font-size: 15px;
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 6px;
   transition: border-color 0.3s;
@@ -93,7 +101,7 @@ html,
 
 .button {
   padding: 12px;
-  font-size: 15px;
+  font-size: 16px;
   background-color: #4caf50;
   color: white;
   border: none;
