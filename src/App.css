@@ -1,5 +1,65 @@
 /* App.css */
 
+/* Reset */
+body,
+html,
+#root {
+  margin: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+  /* FUNDO BRANCO */
+}
+
+/* Tela inicial com duas colunas */
+.tela-inicial {
+  display: flex;
+  height: 100vh;
+  background-color: #ffffff;
+  /* fundo branco */
+}
+
+/* Lado esquerdo (só visível sem login) */
+.lado-esquerdo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 2px solid #ccc;
+  color: navy;
+  background-color: #ffffff;
+}
+
+.lado-esquerdo h1 {
+  font-size: 2.5em;
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* Lado direito onde fica o conteúdo principal */
+.lado-direito {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #ffffff;
+}
+
+/* Botão de sair */
+.botao-sair {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.botao-sair:hover {
+  background-color: #0056b3;
+}
+
 /* Container de Login/Cadastro */
 .container {
   max-width: 400px;
@@ -8,7 +68,6 @@
   border: 1px solid #ccc;
   border-radius: 12px;
   text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -63,55 +122,13 @@
   font-size: 14px;
 }
 
-/* Container geral com sidebar e main */
-.home-container {
-  display: flex;
-  height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Header */
-.header {
-  position: fixed;
-  top: 0;
-  left: 200px;
-  /* largura da sidebar */
-  right: 0;
-  height: 60px;
-  background: #ffffff;
-  border-bottom: 1px solid #ddd;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-}
-
-/* Sidebar */
-.sidebar {
-  width: 200px;
-  background: #2c3e50;
-  color: #ecf0f1;
-  padding: 20px;
-  height: 100vh;
-  box-sizing: border-box;
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* Main content */
+/* Tabela */
 .main-content {
-  margin-left: 200px;
-  margin-top: 60px;
   padding: 20px;
   flex: 1;
   overflow-y: auto;
 }
 
-/* Cabeçalho da tabela */
 .table-header {
   display: flex;
   justify-content: space-between;
@@ -119,7 +136,6 @@
   margin-bottom: 16px;
 }
 
-/* Tabela */
 .produtos-table {
   width: 100%;
   border-collapse: collapse;
@@ -137,7 +153,7 @@
   font-weight: bold;
 }
 
-/* Botões */
+/* Botões da tabela */
 .button {
   background-color: #4caf50;
   border: none;
@@ -202,59 +218,4 @@
   color: #e74c3c;
   margin-bottom: 10px;
   font-size: 13px;
-}
-
-/* src/App.css */
-
-body,
-html,
-#root {
-  margin: 0;
-  height: 100%;
-  font-family: 'Arial', sans-serif;
-}
-
-.tela-inicial {
-  display: flex;
-  height: 100vh;
-  background: linear-gradient(to bottom right, #f5af19, #f12711);
-  /* gradiente amarelo-laranja */
-}
-
-.lado-esquerdo {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-right: 2px solid #333;
-  background: transparent;
-  color: navy;
-}
-
-.lado-esquerdo h1 {
-  font-size: 2.5em;
-  text-align: center;
-  line-height: 1.3;
-}
-
-.lado-direito {
-  flex: 1;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background: transparent;
-}
-
-.botao-sair {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.botao-sair:hover {
-  background-color: #0056b3;
 }
