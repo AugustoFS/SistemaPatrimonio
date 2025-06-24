@@ -1,7 +1,6 @@
 // src/App.js
 import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import '../App.css';
 
 import Login from './components/Login';
 import Cadastro from './components/Cadastro';
