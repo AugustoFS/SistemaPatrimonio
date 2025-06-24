@@ -21,51 +21,46 @@ function App() {
   };
 
   return (
-    <div className="home-container">
-      <div className="sidebar">
-        <h3>Sistema de Patrimônio</h3>
-        {isLoggedIn && (
-          <button onClick={handleLogout} style={{ marginTop: '20px' }}>
-            Sair
-          </button>
-        )}
-      </div>
+    <div className="home-container" style={{ padding: '20px' }}>
+      {isLoggedIn && (
+        <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+          <button onClick={handleLogout}>Sair</button>
+        </div>
+      )}
 
-      <div className="main-content" style={{ flex: 1, padding: '20px' }}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              isLoggedIn ? (
-                <Navigate to="/produtos" />
-              ) : (
-                <Login onLoginSuccess={handleLoginSuccess} />
-              )
-            }
-          />
-          <Route
-            path="/cadastro"
-            element={
-              isLoggedIn ? (
-                <Navigate to="/produtos" />
-              ) : (
-                <Cadastro onCadastroSuccess={handleLoginSuccess} />
-              )
-            }
-          />
-          <Route
-            path="/produtos"
-            element={
-              isLoggedIn ? (
-                <TabelaProdutos usuarioId={usuarioId} />
-              ) : (
-                <Navigate to="/" />
-              )
-            }
-          />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            isLoggedIn ? (
+              <Navigate to="/produtos" />
+            ) : (
+              <Login onLoginSuccess={handleLoginSuccess} />
+            )
+          }
+        />
+        <Route
+          path="/cadastro"
+          element={
+            isLoggedIn ? (
+              <Navigate to="/produtos" />
+            ) : (
+              <Cadastro onCadastroSuccess={handleLoginSuccess} />
+            )
+          }
+        />
+        <Route
+          path="/produtos"
+          element={
+            isLoggedIn ? (
+              <TabelaProdutos usuarioId={usuarioId} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
     </div>
   );
 }
