@@ -12,12 +12,18 @@ const Login = ({ onLoginSuccess }) => {
         e.preventDefault();
 
         try {
-            const response = await fetch(`/api/usuarios?email=${email}&senha=${password}`);
+            const response = await fetch(`http://localhost:3001/api/usuarios?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(password)}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
             const data = await response.json();
 
             if (data.autenticado) {
-                onLoginSuccess(data.usuario_id);  // chama função do App para atualizar estado
-                navigate('/produtos');             // redireciona para produtos
+                onLoginSuccess(data.usuario_id);
+                navigate('/produtos');
             } else {
                 setMessage('Credenciais inválidas!');
             }

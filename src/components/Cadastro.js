@@ -21,8 +21,8 @@ const Cadastro = ({ onCadastroSuccess }) => {
             const data = await response.json();
 
             if (response.ok) {
-                onCadastroSuccess(data.usuario_id); // chama função do App para atualizar estado
-                navigate('/produtos');               // redireciona para produtos
+                onCadastroSuccess(data.usuario_id);
+                navigate('/produtos');
             } else {
                 setMessage(data.erro || 'Erro ao cadastrar usuário.');
             }
