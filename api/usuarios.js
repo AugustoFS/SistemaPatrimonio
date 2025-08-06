@@ -1,4 +1,3 @@
-// pages/api/usuarios.js
 import { Pool } from 'pg';
 import bcrypt from 'bcrypt';
 
