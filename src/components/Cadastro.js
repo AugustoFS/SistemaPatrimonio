@@ -2,36 +2,35 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
-const Cadastro = ({ onCadastroSuccess }) => {
+const Cadastro = () => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
+    const [senha, setSenha] = useState('');
+    const [mensagem, setMensagem] = useState('');
     const navigate = useNavigate();
 
     const handleCadastro = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await fetch('/api/usuarios', {
+            const response = await fetch('http://localhost:3001/api/usuarios', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, senha: password }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, senha }),
             });
 
             const data = await response.json();
 
-            if (response.ok) {
-                onCadastroSuccess(data.usuario_id);
-                navigate('/produtos');
+            if (data.usuario_id) {
+                setMensagem('Cadastro realizado com sucesso!');
+                setTimeout(() => navigate('/'), 1500);
             } else {
-                setMessage(data.erro || 'Erro ao cadastrar usuário.');
+                setMensagem('Erro ao cadastrar usuário.');
             }
         } catch {
-            setMessage('Erro na comunicação com o servidor.');
+            setMensagem('Erro na comunicação com o servidor.');
         }
-
-        setEmail('');
-        setPassword('');
     };
 
     return (
@@ -49,17 +48,15 @@ const Cadastro = ({ onCadastroSuccess }) => {
                 <input
                     type="password"
                     placeholder="Senha"
-                    value={password}
+                    value={senha}
                     required
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => setSenha(e.target.value)}
                     className="input"
                 />
                 <button type="submit" className="button">Cadastrar</button>
             </form>
-            {message && <p className="message">{message}</p>}
-            <button onClick={() => navigate('/')} className="toggle">
-                Já tem conta? Faça login
-            </button>
+            {mensagem && <p className="message">{mensagem}</p>}
+            <button onClick={() => navigate('/')} className="toggle">Já tem conta? Fazer login</button>
         </div>
     );
 };

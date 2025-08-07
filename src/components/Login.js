@@ -4,35 +4,26 @@ import '../App.css';
 
 const Login = ({ onLoginSuccess }) => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [message, setMessage] = useState('');
+    const [senha, setSenha] = useState('');
+    const [mensagem, setMensagem] = useState('');
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await fetch(`http://localhost:3001/api/usuarios?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(password)}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
+            const response = await fetch(`http://localhost:3001/api/usuarios?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(senha)}`);
             const data = await response.json();
 
             if (data.autenticado) {
                 onLoginSuccess(data.usuario_id);
                 navigate('/produtos');
             } else {
-                setMessage('Credenciais inválidas!');
+                setMensagem('Email ou senha inválidos.');
             }
         } catch {
-            setMessage('Erro na comunicação com o servidor.');
+            setMensagem('Erro ao conectar com o servidor.');
         }
-
-        setEmail('');
-        setPassword('');
     };
 
     return (
@@ -50,17 +41,15 @@ const Login = ({ onLoginSuccess }) => {
                 <input
                     type="password"
                     placeholder="Senha"
-                    value={password}
+                    value={senha}
                     required
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => setSenha(e.target.value)}
                     className="input"
                 />
                 <button type="submit" className="button">Entrar</button>
             </form>
-            {message && <p className="message">{message}</p>}
-            <button onClick={() => navigate('/cadastro')} className="toggle">
-                Não tem conta? Cadastre-se
-            </button>
+            {mensagem && <p className="message">{mensagem}</p>}
+            <button onClick={() => navigate('/cadastro')} className="toggle">Não tem conta? Cadastre-se</button>
         </div>
     );
 };

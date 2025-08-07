@@ -13,10 +13,16 @@ export default async function handler(req, res) {
         const { email, senha } = req.body;
 
         if (!email || !senha) {
-            return res.status(400).json({ erro: 'Email e senha são obrigatórios' });
+            return res.status(400).json({ erro: 'Email e senha são obrigatórios.' });
         }
 
         try {
+            // Verificar se usuário já existe
+            const existe = await pool.query('SELECT 1 FROM usuarios WHERE email = $1', [email]);
+            if (existe.rowCount > 0) {
+                return res.status(409).json({ erro: 'Usuário já cadastrado.' });
+            }
+
             const hash = await bcrypt.hash(senha, 10);
 
             const result = await pool.query(
@@ -24,21 +30,25 @@ export default async function handler(req, res) {
                 [email, hash]
             );
 
-            res.status(200).json({ usuario_id: result.rows[0].id });
+            res.status(201).json({ usuario_id: result.rows[0].id });
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ erro: 'Erro ao cadastrar usuário', detalhe: err.message });
+            console.error('Erro ao cadastrar usuário:', err);
+            res.status(500).json({ erro: 'Erro interno no servidor.' });
         }
-    }
 
-    else if (req.method === 'GET') {
+    } else if (req.method === 'GET') {
         const { email, senha } = req.query;
+
+        if (!email || !senha) {
+            return res.status(400).json({ erro: 'Email e senha são obrigatórios.' });
+        }
 
         try {
             const result = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
 
             if (result.rows.length === 0) {
-                return res.status(401).json({ autenticado: false });
+                // Usuário não encontrado
+                return res.status(401).json({ autenticado: false, erro: 'Credenciais inválidas.' });
             }
 
             const usuario = result.rows[0];
@@ -47,15 +57,15 @@ export default async function handler(req, res) {
             if (senhaCorreta) {
                 res.status(200).json({ autenticado: true, usuario_id: usuario.id });
             } else {
-                res.status(401).json({ autenticado: false });
+                res.status(401).json({ autenticado: false, erro: 'Credenciais inválidas.' });
             }
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ erro: 'Erro ao buscar usuário', detalhe: err.message });
+            console.error('Erro ao buscar usuário:', err);
+            res.status(500).json({ erro: 'Erro interno no servidor.' });
         }
-    }
 
-    else {
-        res.status(405).json({ erro: 'Método não permitido' });
+    } else {
+        res.setHeader('Allow', ['GET', 'POST']);
+        res.status(405).json({ erro: `Método ${req.method} não permitido.` });
     }
 }

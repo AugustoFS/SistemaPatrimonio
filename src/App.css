@@ -1,236 +1,31 @@
-/* App.css */
-
-/* Reset */
-body,
-html,
-#root {
-  margin: 0;
-  height: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #ffffff;
-  /* FUNDO BRANCO */
-}
-
-/* Tela inicial com duas colunas */
-.tela-inicial {
-  display: flex;
-  height: 100vh;
-  background-color: #ffffff;
-  /* fundo branco */
-}
-
-/* Lado esquerdo (só visível sem login) */
-.lado-esquerdo {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* Removida a borda central */
-  background-color: #ffffff;
-  padding: 15%;
-  border-right: #33333327 solid 1px;
-}
-
-.lado-esquerdo h1 {
-  align-content: center;
-  font-size: 3em;
-  text-align: center;
-  line-height: 1.3;
-}
-
-/* Lado direito onde fica o conteúdo principal */
-.lado-direito {
-  flex: 1;
-  padding: 20px;
-  padding-right: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  /* não centraliza verticalmente */
-  background-color: #ffffff;
-}
-
-/* Botão de sair */
-.botao-sair {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.botao-sair:hover {
-  background-color: #0056b3;
-}
-
-/* Container de Login/Cadastro */
 .container {
   max-width: 400px;
-  margin: 70px auto 0 auto;
-  /* afastado do topo */
+  margin: 40px auto;
   padding: 30px;
-  /* Borda removida */
-  /* border: 1px solid #ccc; */
-  border-radius: 12px;
+  border-radius: 8px;
+  background-color: #f7f7f7;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  background-color: #ffffff;
-  color: #333333;
-  /* cinza escuro */
-  font-size: 18px;
-  /* texto maior */
-  font-weight: 500;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 15px;
 }
 
 .input {
-  padding: 12px;
+  padding: 10px;
   font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  transition: border-color 0.3s;
 }
 
-.input:focus {
-  outline: none;
-  border-color: #4caf50;
-}
-
-.button {
-  padding: 12px;
+.button, .toggle {
+  padding: 10px;
   font-size: 16px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.button:hover {
-  background-color: #45a049;
-}
-
-.toggle {
-  margin-top: 12px;
-  background: none;
-  border: none;
-  color: #007bff;
-  cursor: pointer;
-  text-decoration: underline;
-  font-size: 14px;
 }
 
 .message {
-  margin-top: 12px;
-  color: #333;
-  font-size: 14px;
-}
-
-/* Tabela */
-.main-content {
-  padding: 20px;
-  flex: 1;
-  overflow-y: auto;
-}
-
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.produtos-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.produtos-table th,
-.produtos-table td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: left;
-}
-
-.produtos-table th {
-  background-color: #f0f0f0;
-  font-weight: bold;
-}
-
-/* Botões da tabela */
-.button {
-  background-color: #4caf50;
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.button:hover {
-  background-color: #45a049;
-}
-
-.cancel-button {
-  background-color: #f44336;
-}
-
-.cancel-button:hover {
-  background-color: #d32f2f;
-}
-
-/* Modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-}
-
-.modal-card {
-  background: white;
-  padding: 24px;
-  border-radius: 8px;
-  width: 350px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-.form input {
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 10px;
-  box-sizing: border-box;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.form-buttons {
-  display: flex;
-  justify-content: space-between;
-}
-
-.error {
-  color: #e74c3c;
-  margin-bottom: 10px;
-  font-size: 13px;
-}
-
-.h1 {
-  text-align: justify;
-  font-size: 60px;
+  margin-top: 10px;
+  color: red;
 }
