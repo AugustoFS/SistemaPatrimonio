@@ -1,64 +1,57 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../App.css';
+// src/components/Cadastro.js
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getUsuarios, salvarUsuario } from "../utils/storage";
 
 const Cadastro = () => {
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
-    const [mensagem, setMensagem] = useState('');
-    const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [mensagem, setMensagem] = useState("");
+  const navigate = useNavigate();
 
-    const handleCadastro = async (e) => {
-        e.preventDefault();
+  const handleCadastro = (e) => {
+    e.preventDefault();
+    const usuarios = getUsuarios();
 
-        try {
-            const response = await fetch('http://localhost:3001/api/usuarios', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, senha }),
-            });
+    if (usuarios.find((u) => u.email === email)) {
+      setMensagem("Usuário já cadastrado.");
+      return;
+    }
 
-            const data = await response.json();
+    const novoUsuario = { id: Date.now(), email, senha };
+    salvarUsuario(novoUsuario);
+    setMensagem("Cadastro realizado com sucesso!");
+    setTimeout(() => navigate("/"), 1500);
+  };
 
-            if (data.usuario_id) {
-                setMensagem('Cadastro realizado com sucesso!');
-                setTimeout(() => navigate('/'), 1500);
-            } else {
-                setMensagem('Erro ao cadastrar usuário.');
-            }
-        } catch {
-            setMensagem('Erro na comunicação com o servidor.');
-        }
-    };
-
-    return (
-        <div className="container">
-            <h2>Cadastro</h2>
-            <form onSubmit={handleCadastro} className="form">
-                <input
-                    type="email"
-                    placeholder="E-mail"
-                    value={email}
-                    required
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="input"
-                />
-                <input
-                    type="password"
-                    placeholder="Senha"
-                    value={senha}
-                    required
-                    onChange={(e) => setSenha(e.target.value)}
-                    className="input"
-                />
-                <button type="submit" className="button">Cadastrar</button>
-            </form>
-            {mensagem && <p className="message">{mensagem}</p>}
-            <button onClick={() => navigate('/')} className="toggle">Já tem conta? Fazer login</button>
-        </div>
-    );
+  return (
+    <div className="container">
+      <h2>Cadastro</h2>
+      <form onSubmit={handleCadastro} className="form">
+        <input
+          type="email"
+          placeholder="E-mail"
+          value={email}
+          required
+          onChange={(e) => setEmail(e.target.value)}
+          className="input"
+        />
+        <input
+          type="password"
+          placeholder="Senha"
+          value={senha}
+          required
+          onChange={(e) => setSenha(e.target.value)}
+          className="input"
+        />
+        <button type="submit" className="button">Cadastrar</button>
+      </form>
+      {mensagem && <p className="message">{mensagem}</p>}
+      <button onClick={() => navigate("/")} className="toggle">
+        Já tem conta? Fazer login
+      </button>
+    </div>
+  );
 };
 
 export default Cadastro;
