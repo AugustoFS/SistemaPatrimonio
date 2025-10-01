@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 import bcrypt from 'bcrypt';
+import "./App.css";
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,

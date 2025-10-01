@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUsuarios, salvarUsuario } from "../utils/storage";
+import "./App.css";
 
 const Cadastro = () => {
   const [email, setEmail] = useState("");

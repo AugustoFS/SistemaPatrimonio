@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Cadastro from "./components/Cadastro";
 import TabelaProdutos from "./components/TabelaProdutos";
+import "./App.css";
 
 function App() {
   const [usuarioId, setUsuarioId] = useState(null);
