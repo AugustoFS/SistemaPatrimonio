@@ -6,14 +6,19 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+body {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
 /* ===== Container principal ===== */
 .container {
   max-width: 400px;
   margin: 60px auto;
   padding: 35px 25px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #ffffff, #f4f7fa);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  background: #1e1e1e;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
   text-align: center;
   animation: fadeIn 0.5s ease-in-out;
 }
@@ -21,61 +26,142 @@
 /* Título */
 .container h2 {
   margin-bottom: 20px;
-  color: #333;
+  color: #ffffff;
 }
 
 /* ===== Form ===== */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 18px;
 }
 
 /* ===== Inputs ===== */
 .input {
   padding: 12px;
   font-size: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid #333;
   border-radius: 8px;
+  background-color: #2a2a2a;
+  color: #e0e0e0;
   transition: all 0.3s ease;
-  background-color: #fff;
 }
 
 .input:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+  border-color: #1e90ff;
+  box-shadow: 0 0 6px rgba(30, 144, 255, 0.6);
   outline: none;
 }
 
 /* ===== Botões ===== */
-.button,
-.toggle {
+.button {
   padding: 12px;
   font-size: 16px;
   cursor: pointer;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(135deg, #007bff, #0056b3);
+  background: linear-gradient(135deg, #1e90ff, #0066cc);
   color: white;
   font-weight: bold;
   transition: transform 0.1s ease, background 0.3s ease;
+  margin-top: 10px;
 }
 
-.button:hover,
-.toggle:hover {
-  background: linear-gradient(135deg, #0056b3, #004494);
+.button:hover {
+  background: linear-gradient(135deg, #0066cc, #004c99);
 }
 
-.button:active,
-.toggle:active {
+.button:active {
   transform: scale(0.97);
+}
+
+/* ===== Botão de troca (link) ===== */
+.toggle {
+  margin-top: 15px;
+  background: none;
+  border: none;
+  color: #1e90ff;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.toggle:hover {
+  color: #63b3ff;
 }
 
 /* ===== Mensagens ===== */
 .message {
   margin-top: 12px;
-  color: #d9534f;
+  color: #ff4d4d;
   font-size: 14px;
+}
+
+/* ===== Tabela de Produtos ===== */
+.table-container {
+  max-width: 90%;
+  margin: 40px auto;
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  overflow-x: auto;
+  position: relative;
+}
+
+/* Botão de adicionar no canto direito */
+.add-button {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #28a745, #218838);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.add-button:hover {
+  background: linear-gradient(135deg, #218838, #1c7430);
+}
+
+.add-button:active {
+  transform: scale(0.97);
+}
+
+/* Estilo da tabela (semelhante ao Excel) */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 50px;
+  /* espaço para o botão */
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  border: 1px solid #333;
+  text-align: left;
+}
+
+.table th {
+  background: #2d2d2d;
+  color: #ffffff;
+}
+
+.table tr:nth-child(even) {
+  background: #252525;
+}
+
+.table tr:nth-child(odd) {
+  background: #1e1e1e;
+}
+
+.table tr:hover {
+  background: #333333;
 }
 
 /* ===== Animações ===== */
@@ -92,9 +178,22 @@
 }
 
 /* ===== Responsividade ===== */
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .container {
     margin: 30px 15px;
     padding: 25px 20px;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .add-button {
+    top: 10px;
+    right: 10px;
+    padding: 8px 12px;
+    font-size: 14px;
   }
 }
