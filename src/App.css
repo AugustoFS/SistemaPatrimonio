@@ -1,83 +1,57 @@
-/* Reset básico */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-  background: #f4f6f9;
-  color: #333;
-}
-
 /* Container centralizado */
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-/* Card de formulário */
-.card {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-  width: 100%;
   max-width: 400px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 8px;
+  background-color: #f7f7f7;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-/* Títulos */
-.card h2 {
-  margin-bottom: 1.5rem;
-  color: #444;
+/* Formulário em coluna */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 /* Inputs */
-input {
-  width: 100%;
+.input {
   padding: 10px;
-  margin: 0.5rem 0;
+  font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 6px;
   transition: border 0.2s;
 }
 
-input:focus {
+.input:focus {
+  border-color: #007bff;
   outline: none;
-  border: 1px solid #007bff;
 }
 
 /* Botões */
-button {
-  width: 100%;
+.button,
+.toggle {
   padding: 10px;
-  margin-top: 1rem;
+  font-size: 16px;
+  cursor: pointer;
   border: none;
-  border-radius: 8px;
-  background: #007bff;
+  border-radius: 6px;
+  background-color: #007bff;
   color: white;
   font-weight: bold;
-  cursor: pointer;
   transition: background 0.3s;
 }
 
-button:hover {
-  background: #0056b3;
+.button:hover,
+.toggle:hover {
+  background-color: #0056b3;
 }
 
-/* Links */
-a {
-  display: block;
-  margin-top: 1rem;
-  text-decoration: none;
-  color: #007bff;
+/* Mensagens de erro ou aviso */
+.message {
+  margin-top: 10px;
+  color: red;
   font-size: 14px;
-}
-
-a:hover {
-  text-decoration: underline;
 }
