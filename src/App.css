@@ -1,31 +1,76 @@
-.container {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 30px;
-  border-radius: 8px;
-  background-color: #f7f7f7;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #f4f6f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Container do login */
+.login-container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 320px;
   text-align: center;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.login-container h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
 }
 
-.input {
-  padding: 10px;
-  font-size: 16px;
+/* Inputs */
+.login-container input {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 0.6rem 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.3s;
 }
 
-.button, .toggle {
-  padding: 10px;
-  font-size: 16px;
+.login-container input:focus {
+  border-color: #007bff;
+}
+
+/* Botão */
+.login-container button {
+  width: 100%;
+  padding: 0.9rem;
+  margin-top: 1rem;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
   cursor: pointer;
+  transition: background 0.3s;
 }
 
-.message {
-  margin-top: 10px;
-  color: red;
+.login-container button:hover {
+  background: #0056b3;
+}
+
+/* Link de alternar */
+.toggle-link {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #007bff;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.toggle-link:hover {
+  text-decoration: underline;
 }
