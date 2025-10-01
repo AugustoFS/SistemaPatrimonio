@@ -53,18 +53,18 @@ body {
   outline: none;
 }
 
-/* ===== Botões ===== */
+/* ===== Botões gerais ===== */
 .button {
-  padding: 12px;
-  font-size: 16px;
+  padding: 10px 15px;
+  font-size: 15px;
   cursor: pointer;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   background: linear-gradient(135deg, #1e90ff, #0066cc);
   color: white;
   font-weight: bold;
+  margin: 5px 0;
   transition: transform 0.1s ease, background 0.3s ease;
-  margin-top: 10px;
 }
 
 .button:hover {
@@ -75,7 +75,16 @@ body {
   transform: scale(0.97);
 }
 
-/* ===== Botão de troca (link) ===== */
+/* Botão cancel (vermelho) */
+.cancel-button {
+  background: linear-gradient(135deg, #d9534f, #c12b2b);
+}
+
+.cancel-button:hover {
+  background: linear-gradient(135deg, #c12b2b, #a71f1f);
+}
+
+/* ===== Toggle link ===== */
 .toggle {
   margin-top: 15px;
   background: none;
@@ -98,70 +107,81 @@ body {
 }
 
 /* ===== Tabela de Produtos ===== */
-.table-container {
-  max-width: 90%;
-  margin: 40px auto;
-  background: #1e1e1e;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-  overflow-x: auto;
-  position: relative;
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-/* Botão de adicionar no canto direito */
-.add-button {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #28a745, #218838);
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.1s ease;
-}
-
-.add-button:hover {
-  background: linear-gradient(135deg, #218838, #1c7430);
-}
-
-.add-button:active {
-  transform: scale(0.97);
-}
-
-/* Estilo da tabela (semelhante ao Excel) */
-.table {
+.produtos-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 50px;
-  /* espaço para o botão */
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
-.table th,
-.table td {
-  padding: 12px 15px;
+.produtos-table th,
+.produtos-table td {
+  padding: 12px;
   border: 1px solid #333;
   text-align: left;
+  font-size: 14px;
 }
 
-.table th {
-  background: #2d2d2d;
+.produtos-table th {
+  background-color: #2d2d2d;
   color: #ffffff;
 }
 
-.table tr:nth-child(even) {
-  background: #252525;
+.produtos-table tr:nth-child(even) {
+  background-color: #252525;
 }
 
-.table tr:nth-child(odd) {
-  background: #1e1e1e;
+.produtos-table tr:nth-child(odd) {
+  background-color: #1e1e1e;
 }
 
-.table tr:hover {
-  background: #333333;
+.produtos-table tr:hover {
+  background-color: #333333;
+}
+
+/* Botão de adicionar produtos (canto superior direito da tabela) */
+.table-header .button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #28a745, #218838);
+}
+
+.table-header .button:hover {
+  background: linear-gradient(135deg, #218838, #1c7430);
+}
+
+/* ===== Modal ===== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-card {
+  background-color: #1e1e1e;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  text-align: center;
 }
 
 /* ===== Animações ===== */
@@ -179,21 +199,21 @@ body {
 
 /* ===== Responsividade ===== */
 @media (max-width: 600px) {
-  .container {
+
+  .container,
+  .modal-card {
     margin: 30px 15px;
     padding: 25px 20px;
   }
 
-  .table th,
-  .table td {
+  .produtos-table th,
+  .produtos-table td {
     padding: 8px 10px;
-    font-size: 14px;
+    font-size: 12px;
   }
 
-  .add-button {
-    top: 10px;
-    right: 10px;
-    padding: 8px 12px;
-    font-size: 14px;
+  .table-header .button {
+    padding: 6px 10px;
+    font-size: 12px;
   }
 }
