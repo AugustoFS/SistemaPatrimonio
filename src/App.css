@@ -240,104 +240,75 @@ body {
   }
 }
 
-/* ===== Tela de Introdução ===== */
-.intro-container {
+/* Layout geral */
+.introducao-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   background-color: #121212;
   color: #e0e0e0;
-  animation: fadeIn 0.6s ease-in-out;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* ===== Cabeçalho ===== */
+/* Cabeçalho */
 .intro-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
+  padding: 20px 50px;
   background-color: #1e1e1e;
   border-bottom: 1px solid #333;
 }
 
-.logo {
-  font-size: 20px;
+.intro-logo {
+  font-size: 22px;
   font-weight: bold;
-  color: #1e90ff;
+  color: #00bfff;
 }
 
-.auth-buttons {
+.intro-links {
   display: flex;
-  gap: 10px;
+  gap: 20px;
 }
 
-.button.small {
-  padding: 8px 14px;
-  font-size: 14px;
-  border-radius: 6px;
+.intro-link {
+  color: #00bfff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
 }
 
-.button.small.outline {
-  background: none;
-  border: 1px solid #1e90ff;
-  color: #1e90ff;
+.intro-link:hover {
+  color: #0090d6;
 }
 
-.button.small.outline:hover {
-  background-color: #1e90ff;
-  color: #fff;
-}
-
-/* ===== Corpo ===== */
+/* Conteúdo principal */
 .intro-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   text-align: center;
-  padding: 60px 20px;
+  padding: 80px 20px;
 }
 
-.intro-title {
-  font-size: 28px;
+.intro-main h1 {
+  font-size: 32px;
+  color: #00bfff;
   margin-bottom: 20px;
-  color: #ffffff;
 }
 
-.intro-text {
-  max-width: 700px;
+.intro-main p {
+  font-size: 18px;
+  max-width: 600px;
+  margin: 0 auto;
   line-height: 1.6;
-  font-size: 16px;
-  color: #cccccc;
+  color: #ccc;
 }
 
-/* ===== Rodapé ===== */
+/* Rodapé */
 .intro-footer {
   text-align: center;
   padding: 15px;
-  border-top: 1px solid #333;
-  background-color: #1e1e1e;
   font-size: 14px;
-  color: #aaaaaa;
-}
-
-/* ===== Responsividade ===== */
-@media (max-width: 600px) {
-  .intro-header {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .intro-main {
-    padding: 40px 15px;
-  }
-
-  .intro-title {
-    font-size: 22px;
-  }
-
-  .intro-text {
-    font-size: 14px;
-  }
+  background-color: #1e1e1e;
+  border-top: 1px solid #333;
+  color: #888;
 }

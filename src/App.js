@@ -1,19 +1,25 @@
-import React, { useState } from "react";
-import TelaIntroducao from "./components/TelaIntroducao";
+import React, { useState, useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import Introducao from "./components/Introducao";
 import Login from "./components/Login";
 import Cadastro from "./components/Cadastro";
+import TabelaProdutos from "./components/TabelaProdutos";
 
 function App() {
-  const [tela, setTela] = useState("intro");
+  const [usuarioId, setUsuarioId] = useState(null);
+
+  useEffect(() => {
+    const salvo = localStorage.getItem("usuarioLogado");
+    if (salvo) setUsuarioId(Number(salvo));
+  }, []);
 
   return (
-    <>
-      {tela === "intro" && (
-        <TelaIntroducao onLogin={() => setTela("login")} onSignup={() => setTela("signup")} />
-      )}
-      {tela === "login" && <Login />}
-      {tela === "signup" && <Cadastro />}
-    </>
+    <Routes>
+      <Route path="/" element={<Introducao />} />
+      <Route path="/login" element={<Login onLoginSuccess={setUsuarioId} />} />
+      <Route path="/cadastro" element={<Cadastro />} />
+      <Route path="/produtos" element={<TabelaProdutos usuarioId={usuarioId} />} />
+    </Routes>
   );
 }
 

@@ -1,34 +1,35 @@
 import React from "react";
-import "../App.css";
+import { Link } from "react-router-dom";
+import "./Introducao.css";
 
-function TelaIntroducao({ onLogin, onSignup }) {
+function Introducao() {
     return (
-        <div className="intro-container">
-            {/* ===== Cabeçalho ===== */}
+        <div className="introducao-container">
+            {/* Cabeçalho */}
             <header className="intro-header">
-                <h1 className="logo">Gerenciamento de Patrimônios</h1>
-                <div className="auth-buttons">
-                    <button className="button small" onClick={onLogin}>Login</button>
-                    <button className="button small outline" onClick={onSignup}>Sign Up</button>
+                <h2 className="intro-logo">Sistema de Patrimônios</h2>
+                <div className="intro-links">
+                    <Link to="/login" className="intro-link">Login</Link>
+                    <Link to="/cadastro" className="intro-link">Sign Up</Link>
                 </div>
             </header>
 
-            {/* ===== Corpo principal ===== */}
+            {/* Corpo */}
             <main className="intro-main">
-                <h2 className="intro-title">Bem-vindo ao Sistema de Gerenciamento de Patrimônios</h2>
-                <p className="intro-text">
-                    Nosso sistema foi desenvolvido para facilitar o controle e a administração de bens e patrimônios,
-                    com foco em atender pequenas empresas e instituições públicas — como escolas e órgãos municipais —
-                    garantindo uma gestão eficiente, segura e moderna.
+                <h1>Bem-vindo ao Sistema de Gerenciamento de Patrimônios</h1>
+                <p>
+                    Este sistema foi desenvolvido com o foco em auxiliar pequenas empresas
+                    e instituições públicas, como escolas, no controle e gerenciamento
+                    eficiente de seus bens e patrimônios.
                 </p>
             </main>
 
-            {/* ===== Rodapé ===== */}
+            {/* Rodapé */}
             <footer className="intro-footer">
-                <p>© 2025 Gerenciamento de Patrimônios</p>
+                <p>© Sistema de Patrimônios 2025</p>
             </footer>
         </div>
     );
 }
 
-export default TelaIntroducao;
+export default Introducao;
