@@ -22,12 +22,12 @@ const Cadastro = () => {
     const novoUsuario = { id: Date.now(), email, senha };
     salvarUsuario(novoUsuario);
     setMensagem("Cadastro realizado com sucesso!");
-    setTimeout(() => navigate("/"), 1500);
+    setTimeout(() => navigate("/login"), 1500); // ✅ redireciona corretamente
   };
 
   return (
     <div className="container">
-      <h2>Cadastro</h2>
+      <h2>Sign Up</h2>
       <form onSubmit={handleCadastro} className="form">
         <input
           type="email"
@@ -47,8 +47,10 @@ const Cadastro = () => {
         />
         <button type="submit" className="button">Cadastrar</button>
       </form>
+
       {mensagem && <p className="message">{mensagem}</p>}
-      <button onClick={() => navigate("/")} className="toggle">
+
+      <button onClick={() => navigate("/login")} className="toggle">
         Já tem conta? Fazer login
       </button>
     </div>
