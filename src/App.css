@@ -294,7 +294,7 @@ body {
 }
 
 .intro-link:hover {
-  color: #0090d6;
+  color: #1e90ff;
 }
 
 /* Conteúdo principal */
@@ -305,7 +305,7 @@ body {
 
 .intro-main h1 {
   font-size: 32px;
-  color: #00bfff;
+  color: #1e90ff;
   margin-bottom: 20px;
 }
 
