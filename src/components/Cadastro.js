@@ -26,7 +26,7 @@ const Cadastro = () => {
 
   return (
     <div className="container">
-      <h2>Cadastro</h2>
+      <h2>Cadastrar</h2>
       <form onSubmit={handleCadastro} className="form">
         <input
           type="email"
@@ -50,7 +50,7 @@ const Cadastro = () => {
       {mensagem && <p className="message">{mensagem}</p>}
 
       <button onClick={() => navigate("/login")} className="toggle">
-        Já tem conta? Faça sua Entre
+        Já tem conta? Faça sua Entrada
       </button>
     </div>
   );
