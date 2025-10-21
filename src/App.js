@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import Introducao from "./components/Introducao";
+import Introducao from "./components/TelaIntroducao";
 import Login from "./components/Login";
 import Cadastro from "./components/Cadastro";
 import TabelaProdutos from "./components/TabelaProdutos";
