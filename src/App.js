@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Introducao from "./components/TelaIntroducao";
@@ -13,12 +14,17 @@ function App() {
     if (salvo) setUsuarioId(Number(salvo));
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("usuarioLogado");
+    setUsuarioId(null);
+  };
+
   return (
     <Routes>
-      <Route path="/" element={<Introducao />} />
-      <Route path="/login" element={<Login onLoginSuccess={setUsuarioId} />} />
-      <Route path="/cadastro" element={<Cadastro />} />
-      <Route path="/produtos" element={<TabelaProdutos usuarioId={usuarioId} />} />
+      <Route path="/" element={<Introducao usuarioId={usuarioId} onLogout={handleLogout} />} />
+      <Route path="/login" element={<Login usuarioId={usuarioId} onLoginSuccess={setUsuarioId} onLogout={handleLogout} />} />
+      <Route path="/cadastro" element={<Cadastro usuarioId={usuarioId} onLogout={handleLogout} />} />
+      <Route path="/produtos" element={<TabelaProdutos usuarioId={usuarioId} onLogout={handleLogout} />} />
     </Routes>
   );
 }

@@ -1,9 +1,11 @@
+// src/components/Cadastro.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUsuarios, salvarUsuario } from "../utils/storage";
-import '../App.css';
+import HeaderFooter from "./HeaderFooter";
+import "../App.css";
 
-const Cadastro = () => {
+const Cadastro = ({ usuarioId, onLogout }) => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mensagem, setMensagem] = useState("");
@@ -25,33 +27,35 @@ const Cadastro = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Cadastrar</h2>
-      <form onSubmit={handleCadastro} className="form">
-        <input
-          type="email"
-          placeholder="E-mail"
-          value={email}
-          required
-          onChange={(e) => setEmail(e.target.value)}
-          className="input"
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          required
-          onChange={(e) => setSenha(e.target.value)}
-          className="input"
-        />
-        <button type="submit" className="button">Cadastrar</button>
-      </form>
+    <div className="page-container">
+      <HeaderFooter usuarioId={usuarioId} onLogout={onLogout} />
 
-      {mensagem && <p className="message">{mensagem}</p>}
-
-      <button onClick={() => navigate("/login")} className="toggle">
-        Já tem conta? Faça sua Entrada
-      </button>
+      <div className="container">
+        <h2>Cadastrar</h2>
+        <form onSubmit={handleCadastro} className="form">
+          <input
+            type="email"
+            placeholder="E-mail"
+            value={email}
+            required
+            onChange={(e) => setEmail(e.target.value)}
+            className="input"
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            value={senha}
+            required
+            onChange={(e) => setSenha(e.target.value)}
+            className="input"
+          />
+          <button type="submit" className="button">Cadastrar</button>
+        </form>
+        {mensagem && <p className="message">{mensagem}</p>}
+        <button onClick={() => navigate("/login")} className="toggle">
+          Já tem conta? Faça sua Entrada
+        </button>
+      </div>
     </div>
   );
 };
