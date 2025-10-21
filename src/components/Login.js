@@ -1,4 +1,3 @@
-// src/components/Login.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUsuarios } from "../utils/storage";
@@ -26,7 +25,7 @@ const Login = ({ onLoginSuccess }) => {
 
   return (
     <div className="container">
-      <h2>Login</h2>
+      <h2>Entrar</h2>
       <form onSubmit={handleLogin} className="form">
         <input
           type="email"
