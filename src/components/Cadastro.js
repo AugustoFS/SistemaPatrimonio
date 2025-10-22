@@ -5,10 +5,6 @@ import '../App.css';
 
 <header className="intro-header">
   <h2 className="intro-logo">Sistema de Patrimônios</h2>
-  <div className="intro-links">
-    <Link to="/login" className="intro-link">Login</Link>
-    <Link to="/cadastro" className="intro-link">Sign Up</Link>
-  </div>
 </header>
 
 const Cadastro = () => {
