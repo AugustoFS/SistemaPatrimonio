@@ -335,8 +335,7 @@ body {
 .conteudo-com-sidebar {
   display: flex;
   flex: 1;
-  min-height: calc(100vh - 120px);
-  /* espaço reservado para header + footer */
+  min-height: calc(100vh - 120px); /* espaço reservado para header + footer */
   background-color: #121212;
 }
 
@@ -379,39 +378,54 @@ body {
 }
 
 /* =========================
-   ÁREA PRINCIPAL DA TABELA
+   ÁREA PRINCIPAL DA TABELA (corrigido)
 ========================= */
-.intro-main {
+.tabela-main {
   flex: 1;
   padding: 30px 40px;
   background-color: #121212;
   overflow-x: auto;
 }
 
-.main-content h2 {
+.tabela-main h2 {
   color: #ffffff;
   margin-bottom: 15px;
 }
 
-/* Ajuste de layout para evitar conflito com tabela existente */
-.produtos-table {
-  margin-top: 10px;
-  border-collapse: collapse;
-  width: 100%;
-  background-color: #1e1e1e;
+/* =========================
+   AJUSTE DA INTRODUÇÃO (RESTAURAR CENTRALIZAÇÃO)
+========================= */
+.introducao-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  background-color: #121212;
+  text-align: center;
 }
 
-.produtos-table th {
-  background-color: #2d2d2d;
+.intro-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.intro-main h1 {
+  font-size: 32px;
   color: #ffffff;
+  margin-bottom: 20px;
 }
 
-.produtos-table td {
-  color: #e0e0e0;
-}
-
-.produtos-table tr:hover {
-  background-color: #2c2c2c;
+.intro-main p {
+  font-size: 18px;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+  color: #ccc;
 }
 
 /* =========================
@@ -435,7 +449,7 @@ body {
     padding-bottom: 0;
   }
 
-  .intro-main {
+  .tabela-main {
     padding: 20px;
   }
 }

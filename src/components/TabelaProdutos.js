@@ -101,7 +101,7 @@ function TabelaProdutos({ usuarioId }) {
         </aside>
 
         {/* Área principal */}
-        <main className="intro-main">
+        <main className="tabela-main">
           <div className="main-content">
             <h2>Produtos</h2>
 
