@@ -1,4 +1,3 @@
-// src/components/TabelaProdutos.js
 import React, { useEffect, useState } from "react";
 import "../App.css";
 import {
@@ -67,72 +66,87 @@ function TabelaProdutos({ usuarioId }) {
   };
 
   return (
-    <div className="main-content">
-      <div className="table-header">
-        <h2>Produtos</h2>
-        <button className="button" onClick={() => abrirModal()}>
-          Adicionar Produto
-        </button>
-      </div>
+    <div className="introducao-container">
+      {/* Cabeçalho */}
+      <header className="intro-header">
+        <h2 className="intro-logo">Sistema de Patrimônios</h2>
+      </header>
 
-      <table className="produtos-table">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Valor</th>
-            <th>Condição</th>
-            <th>Localização</th>
-            <th>Aquisição</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {produtos.length === 0 ? (
-            <tr>
-              <td colSpan="6" style={{ textAlign: "center" }}>
-                Nenhum produto cadastrado.
-              </td>
-            </tr>
-          ) : (
-            produtos.map((p) => (
-              <tr key={p.id}>
-                <td>{p.nome}</td>
-                <td>{p.valor}</td>
-                <td>{p.condicao}</td>
-                <td>{p.localizacao}</td>
-                <td>{p.aquisicao}</td>
-                <td>
-                  <button className="button" onClick={() => abrirModal(p)}>Editar</button>
-                  <button className="button cancel-button" onClick={() => excluir(p.id)}>Excluir</button>
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-
-      {modalAberto && (
-        <div className="modal-overlay">
-          <div className="modal-card">
-            <h3>{editando ? "Editar Produto" : "Novo Produto"}</h3>
-
-            {erro && <div className="error">{erro}</div>}
-
-            <div className="form">
-              <input type="text" name="nome" placeholder="Nome" value={produto.nome} onChange={handleChange} />
-              <input type="text" name="valor" placeholder="Valor" value={produto.valor} onChange={handleChange} />
-              <input type="text" name="condicao" placeholder="Condição" value={produto.condicao} onChange={handleChange} />
-              <input type="text" name="localizacao" placeholder="Localização" value={produto.localizacao} onChange={handleChange} />
-              <input type="text" name="aquisicao" placeholder="Aquisição" value={produto.aquisicao} onChange={handleChange} />
-            </div>
-
-            <div style={{ marginTop: "10px", textAlign: "right" }}>
-              <button className="button" onClick={salvar}>Salvar</button>
-              <button className="button cancel-button" onClick={fecharModal}>Cancelar</button>
-            </div>
+      {/* Conteúdo principal */}
+      <main className="intro-main">
+        <div className="main-content">
+          <div className="table-header">
+            <h2>Produtos</h2>
+            <button className="button" onClick={() => abrirModal()}>
+              Adicionar Produto
+            </button>
           </div>
+
+          <table className="produtos-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Valor</th>
+                <th>Condição</th>
+                <th>Localização</th>
+                <th>Aquisição</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {produtos.length === 0 ? (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: "center" }}>
+                    Nenhum produto cadastrado.
+                  </td>
+                </tr>
+              ) : (
+                produtos.map((p) => (
+                  <tr key={p.id}>
+                    <td>{p.nome}</td>
+                    <td>{p.valor}</td>
+                    <td>{p.condicao}</td>
+                    <td>{p.localizacao}</td>
+                    <td>{p.aquisicao}</td>
+                    <td>
+                      <button className="button" onClick={() => abrirModal(p)}>Editar</button>
+                      <button className="button cancel-button" onClick={() => excluir(p.id)}>Excluir</button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+
+          {modalAberto && (
+            <div className="modal-overlay">
+              <div className="modal-card">
+                <h3>{editando ? "Editar Produto" : "Novo Produto"}</h3>
+
+                {erro && <div className="error">{erro}</div>}
+
+                <div className="form">
+                  <input type="text" name="nome" placeholder="Nome" value={produto.nome} onChange={handleChange} />
+                  <input type="text" name="valor" placeholder="Valor" value={produto.valor} onChange={handleChange} />
+                  <input type="text" name="condicao" placeholder="Condição" value={produto.condicao} onChange={handleChange} />
+                  <input type="text" name="localizacao" placeholder="Localização" value={produto.localizacao} onChange={handleChange} />
+                  <input type="text" name="aquisicao" placeholder="Aquisição" value={produto.aquisicao} onChange={handleChange} />
+                </div>
+
+                <div style={{ marginTop: "10px", textAlign: "right" }}>
+                  <button className="button" onClick={salvar}>Salvar</button>
+                  <button className="button cancel-button" onClick={fecharModal}>Cancelar</button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </main>
+
+      {/* Rodapé */}
+      <footer className="intro-footer">
+        <p>© Sistema de Patrimônios 2025</p>
+      </footer>
     </div>
   );
 }

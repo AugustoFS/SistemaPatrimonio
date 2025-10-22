@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { getUsuarios } from "../utils/storage";
 import "../App.css";
 
@@ -24,31 +24,43 @@ const Login = ({ onLoginSuccess }) => {
   };
 
   return (
-    <div className="container">
-      <h2>Entrar</h2>
-      <form onSubmit={handleLogin} className="form">
-        <input
-          type="email"
-          placeholder="E-mail"
-          value={email}
-          required
-          onChange={(e) => setEmail(e.target.value)}
-          className="input"
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          required
-          onChange={(e) => setSenha(e.target.value)}
-          className="input"
-        />
-        <button type="submit" className="button">Entrar</button>
-      </form>
-      {mensagem && <p className="message">{mensagem}</p>}
-      <button onClick={() => navigate("/cadastro")} className="toggle">
-        Não tem conta? Cadastre-se
-      </button>
+    <div className="introducao-container">
+      {/* Cabeçalho */}
+      <header className="intro-header">
+        <h2 className="intro-logo">Sistema de Patrimônios</h2>
+      </header>
+
+      {/* Conteúdo principal */}
+      <main className="intro-main">
+        <div className="container">
+          <h2>Entrar</h2>
+          <form onSubmit={handleLogin} className="form">
+            <input
+              type="email"
+              placeholder="E-mail"
+              value={email}
+              required
+              onChange={(e) => setEmail(e.target.value)}
+              className="input"
+            />
+            <input
+              type="password"
+              placeholder="Senha"
+              value={senha}
+              required
+              onChange={(e) => setSenha(e.target.value)}
+              className="input"
+            />
+            <button type="submit" className="button">Entrar</button>
+          </form>
+          {mensagem && <p className="message">{mensagem}</p>}
+        </div>
+      </main>
+
+      {/* Rodapé */}
+      <footer className="intro-footer">
+        <p>© Sistema de Patrimônios 2025</p>
+      </footer>
     </div>
   );
 };
