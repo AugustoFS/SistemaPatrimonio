@@ -96,7 +96,7 @@ function TabelaProdutos({ usuarioId }) {
         <aside className="sidebar">
           <h3>Menu</h3>
           <button className="button" onClick={() => abrirModal()}>
-            ➕ Adicionar Produto
+            Adicionar Produto
           </button>
         </aside>
 
