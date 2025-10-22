@@ -31,37 +31,35 @@ const Cadastro = () => {
         <h2 className="intro-logo">Sistema de Patrimônios</h2>
       </header>
 
-      {/* Conteúdo principal */}
-      <main className="intro-main">
-        <div className="container">
-          <h2>Cadastrar</h2>
-          <form onSubmit={handleCadastro} className="form">
-            <input
-              type="email"
-              placeholder="E-mail"
-              value={email}
-              required
-              onChange={(e) => setEmail(e.target.value)}
-              className="input"
-            />
-            <input
-              type="password"
-              placeholder="Senha"
-              value={senha}
-              required
-              onChange={(e) => setSenha(e.target.value)}
-              className="input"
-            />
-            <button type="submit" className="button">Cadastrar</button>
-          </form>
+      {/* Conteúdo existente */}
+      <div className="container">
+        <h2>Cadastrar</h2>
+        <form onSubmit={handleCadastro} className="form">
+          <input
+            type="email"
+            placeholder="E-mail"
+            value={email}
+            required
+            onChange={(e) => setEmail(e.target.value)}
+            className="input"
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            value={senha}
+            required
+            onChange={(e) => setSenha(e.target.value)}
+            className="input"
+          />
+          <button type="submit" className="button">Cadastrar</button>
+        </form>
 
-          {mensagem && <p className="message">{mensagem}</p>}
+        {mensagem && <p className="message">{mensagem}</p>}
 
-          <button onClick={() => navigate("/login")} className="toggle">
-            Já tem conta? Faça sua Entrada
-          </button>
-        </div>
-      </main>
+        <button onClick={() => navigate("/login")} className="toggle">
+          Já tem conta? Faça sua Entrada
+        </button>
+      </div>
 
       {/* Rodapé */}
       <footer className="intro-footer">
