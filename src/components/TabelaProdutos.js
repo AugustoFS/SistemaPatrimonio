@@ -9,7 +9,14 @@ import {
 
 function TabelaProdutos({ usuarioId }) {
   const [produtos, setProdutos] = useState([]);
-  const [produto, setProduto] = useState({ id: null, nome: "", valor: "", condicao: "", localizacao: "", aquisicao: "" });
+  const [produto, setProduto] = useState({
+    id: null,
+    nome: "",
+    valor: "",
+    condicao: "",
+    localizacao: "",
+    aquisicao: "",
+  });
   const [erro, setErro] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
   const [editando, setEditando] = useState(false);
@@ -20,7 +27,9 @@ function TabelaProdutos({ usuarioId }) {
     }
   }, [usuarioId]);
 
-  const abrirModal = (p = { nome: "", valor: "", condicao: "", localizacao: "", aquisicao: "" }) => {
+  const abrirModal = (
+    p = { nome: "", valor: "", condicao: "", localizacao: "", aquisicao: "" }
+  ) => {
     setProduto(p);
     setEditando(!!p.id);
     setModalAberto(true);
@@ -29,7 +38,14 @@ function TabelaProdutos({ usuarioId }) {
 
   const fecharModal = () => {
     setModalAberto(false);
-    setProduto({ id: null, nome: "", valor: "", condicao: "", localizacao: "", aquisicao: "" });
+    setProduto({
+      id: null,
+      nome: "",
+      valor: "",
+      condicao: "",
+      localizacao: "",
+      aquisicao: "",
+    });
     setEditando(false);
     setErro("");
   };
@@ -50,7 +66,9 @@ function TabelaProdutos({ usuarioId }) {
     if (editando) {
       const atualizado = { ...produto, usuarioId };
       atualizarProduto(atualizado);
-      setProdutos(produtos.map((p) => (p.id === atualizado.id ? atualizado : p)));
+      setProdutos(
+        produtos.map((p) => (p.id === atualizado.id ? atualizado : p))
+      );
     } else {
       const novo = salvarProduto({ ...produto, usuarioId });
       setProdutos([...produtos, novo]);
@@ -72,76 +90,126 @@ function TabelaProdutos({ usuarioId }) {
         <h2 className="intro-logo">Sistema de Patrimônios</h2>
       </header>
 
-      {/* Conteúdo principal */}
-      <main className="intro-main">
-        <div className="main-content">
-          <div className="table-header">
-            <h2>Produtos</h2>
-            <button className="button" onClick={() => abrirModal()}>
-              Adicionar Produto
-            </button>
-          </div>
+      {/* Conteúdo principal com sidebar */}
+      <div className="conteudo-com-sidebar">
+        {/* Barra lateral */}
+        <aside className="sidebar">
+          <h3>Menu</h3>
+          <button className="button" onClick={() => abrirModal()}>
+            ➕ Adicionar Produto
+          </button>
+        </aside>
 
-          <table className="produtos-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Valor</th>
-                <th>Condição</th>
-                <th>Localização</th>
-                <th>Aquisição</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {produtos.length === 0 ? (
+        {/* Área principal */}
+        <main className="intro-main">
+          <div className="main-content">
+            <h2>Produtos</h2>
+
+            <table className="produtos-table">
+              <thead>
                 <tr>
-                  <td colSpan="6" style={{ textAlign: "center" }}>
-                    Nenhum produto cadastrado.
-                  </td>
+                  <th>Nome</th>
+                  <th>Valor</th>
+                  <th>Condição</th>
+                  <th>Localização</th>
+                  <th>Aquisição</th>
+                  <th>Ações</th>
                 </tr>
-              ) : (
-                produtos.map((p) => (
-                  <tr key={p.id}>
-                    <td>{p.nome}</td>
-                    <td>{p.valor}</td>
-                    <td>{p.condicao}</td>
-                    <td>{p.localizacao}</td>
-                    <td>{p.aquisicao}</td>
-                    <td>
-                      <button className="button" onClick={() => abrirModal(p)}>Editar</button>
-                      <button className="button cancel-button" onClick={() => excluir(p.id)}>Excluir</button>
+              </thead>
+              <tbody>
+                {produtos.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: "center" }}>
+                      Nenhum produto cadastrado.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  produtos.map((p) => (
+                    <tr key={p.id}>
+                      <td>{p.nome}</td>
+                      <td>{p.valor}</td>
+                      <td>{p.condicao}</td>
+                      <td>{p.localizacao}</td>
+                      <td>{p.aquisicao}</td>
+                      <td>
+                        <button className="button" onClick={() => abrirModal(p)}>
+                          Editar
+                        </button>
+                        <button
+                          className="button cancel-button"
+                          onClick={() => excluir(p.id)}
+                        >
+                          Excluir
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
 
-          {modalAberto && (
-            <div className="modal-overlay">
-              <div className="modal-card">
-                <h3>{editando ? "Editar Produto" : "Novo Produto"}</h3>
+            {modalAberto && (
+              <div className="modal-overlay">
+                <div className="modal-card">
+                  <h3>{editando ? "Editar Produto" : "Novo Produto"}</h3>
 
-                {erro && <div className="error">{erro}</div>}
+                  {erro && <div className="error">{erro}</div>}
 
-                <div className="form">
-                  <input type="text" name="nome" placeholder="Nome" value={produto.nome} onChange={handleChange} />
-                  <input type="text" name="valor" placeholder="Valor" value={produto.valor} onChange={handleChange} />
-                  <input type="text" name="condicao" placeholder="Condição" value={produto.condicao} onChange={handleChange} />
-                  <input type="text" name="localizacao" placeholder="Localização" value={produto.localizacao} onChange={handleChange} />
-                  <input type="text" name="aquisicao" placeholder="Aquisição" value={produto.aquisicao} onChange={handleChange} />
-                </div>
+                  <div className="form">
+                    <input
+                      type="text"
+                      name="nome"
+                      placeholder="Nome"
+                      value={produto.nome}
+                      onChange={handleChange}
+                    />
+                    <input
+                      type="text"
+                      name="valor"
+                      placeholder="Valor"
+                      value={produto.valor}
+                      onChange={handleChange}
+                    />
+                    <input
+                      type="text"
+                      name="condicao"
+                      placeholder="Condição"
+                      value={produto.condicao}
+                      onChange={handleChange}
+                    />
+                    <input
+                      type="text"
+                      name="localizacao"
+                      placeholder="Localização"
+                      value={produto.localizacao}
+                      onChange={handleChange}
+                    />
+                    <input
+                      type="text"
+                      name="aquisicao"
+                      placeholder="Aquisição"
+                      value={produto.aquisicao}
+                      onChange={handleChange}
+                    />
+                  </div>
 
-                <div style={{ marginTop: "10px", textAlign: "right" }}>
-                  <button className="button" onClick={salvar}>Salvar</button>
-                  <button className="button cancel-button" onClick={fecharModal}>Cancelar</button>
+                  <div style={{ marginTop: "10px", textAlign: "right" }}>
+                    <button className="button" onClick={salvar}>
+                      Salvar
+                    </button>
+                    <button
+                      className="button cancel-button"
+                      onClick={fecharModal}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-      </main>
+            )}
+          </div>
+        </main>
+      </div>
 
       {/* Rodapé */}
       <footer className="intro-footer">
