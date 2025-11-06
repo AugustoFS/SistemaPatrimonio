@@ -113,7 +113,7 @@ function TabelaProdutos({ usuarioId }) {
         {/* Barra lateral */}
         <aside className="sidebar">
           <button className="button" onClick={() => abrirModal()}>
-            Adicionar Produto
+            Adicionar
           </button>
           <button className="button" onClick={handleExportar}>
             Exportar
