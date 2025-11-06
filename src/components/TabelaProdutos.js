@@ -1,3 +1,4 @@
+// src/components/TabelaProdutos.js
 import React, { useEffect, useState } from "react";
 import "../App.css";
 import {
@@ -83,6 +84,23 @@ function TabelaProdutos({ usuarioId }) {
     setProdutos(produtos.filter((p) => p.id !== id));
   };
 
+  const handleExportar = () => {
+    alert("Função de exportação será implementada futuramente.");
+  };
+
+  const handleHistorico = () => {
+    alert("Histórico de ações será adicionado em breve.");
+  };
+
+  const handleConfiguracoes = () => {
+    alert("Configurações do sistema em desenvolvimento.");
+  };
+
+  const handleSair = () => {
+    localStorage.removeItem("usuarioLogado");
+    window.location.href = "/";
+  };
+
   return (
     <div className="introducao-container">
       {/* Cabeçalho */}
@@ -94,9 +112,20 @@ function TabelaProdutos({ usuarioId }) {
       <div className="conteudo-com-sidebar">
         {/* Barra lateral */}
         <aside className="sidebar">
-          <h3>Menu</h3>
           <button className="button" onClick={() => abrirModal()}>
             Adicionar Produto
+          </button>
+          <button className="button" onClick={handleExportar}>
+            Exportar
+          </button>
+          <button className="button" onClick={handleHistorico}>
+            Histórico
+          </button>
+          <button className="button" onClick={handleConfiguracoes}>
+            Configurações
+          </button>
+          <button className="button cancel-button" onClick={handleSair}>
+            Sair
           </button>
         </aside>
 
