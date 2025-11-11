@@ -1,33 +1,26 @@
-// src/components/Cadastro.js
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { getUsuarios, salvarUsuario } from "../utils/storage";
+import { getUsuarios } from "../utils/storage";
 import "../App.css";
 
-const Cadastro = () => {
+const Login = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mensagem, setMensagem] = useState("");
   const navigate = useNavigate();
 
-  const handleCadastro = (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
     const usuarios = getUsuarios();
+    const usuario = usuarios.find((u) => u.email === email && u.senha === senha);
 
-    if (usuarios.find((u) => u.email === email)) {
-      setMensagem("Usuário já cadastrado.");
-      return;
+    if (usuario) {
+      onLoginSuccess(usuario.id);
+      localStorage.setItem("usuarioLogado", usuario.id);
+      navigate("/produtos");
+    } else {
+      setMensagem("Email ou senha inválidos.");
     }
-
-    // Cria e salva novo usuário
-    const novoUsuario = { id: Date.now(), email, senha };
-    salvarUsuario(novoUsuario);
-
-    // Salva login no localStorage e redireciona automaticamente
-    localStorage.setItem("usuarioLogado", novoUsuario.id);
-    setMensagem("Cadastro realizado com sucesso! Redirecionando...");
-
-    setTimeout(() => navigate("/produtos"), 1000);
   };
 
   return (
@@ -39,8 +32,8 @@ const Cadastro = () => {
 
       {/* Conteúdo existente */}
       <div className="container">
-        <h2>Cadastrar</h2>
-        <form onSubmit={handleCadastro} className="form">
+        <h2>Entrar</h2>
+        <form onSubmit={handleLogin} className="form">
           <input
             type="email"
             placeholder="E-mail"
@@ -57,13 +50,12 @@ const Cadastro = () => {
             onChange={(e) => setSenha(e.target.value)}
             className="input"
           />
-          <button type="submit" className="button">Cadastrar</button>
+          <button type="submit" className="button">Entrar</button>
         </form>
-
         {mensagem && <p className="message">{mensagem}</p>}
 
-        <button onClick={() => navigate("/login")} className="toggle">
-          Já tem conta? Faça sua Entrada
+        <button onClick={() => navigate("/cadastro")} className="toggle">
+          Não tem conta? Cadastre-se
         </button>
       </div>
 
@@ -75,4 +67,4 @@ const Cadastro = () => {
   );
 };
 
-export default Cadastro;
+export default Login;

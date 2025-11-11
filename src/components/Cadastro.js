@@ -21,7 +21,7 @@ const Cadastro = () => {
     const novoUsuario = { id: Date.now(), email, senha };
     salvarUsuario(novoUsuario);
     setMensagem("Cadastro realizado com sucesso!");
-    setTimeout(() => navigate("/login"), 1500);
+    setTimeout(() => navigate("/produtos"), 1500);
   };
 
   return (
