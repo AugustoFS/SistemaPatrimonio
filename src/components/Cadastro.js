@@ -1,5 +1,6 @@
+// src/components/Cadastro.js
 import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getUsuarios, salvarUsuario } from "../utils/storage";
 import "../App.css";
 
@@ -18,10 +19,15 @@ const Cadastro = () => {
       return;
     }
 
+    // Cria e salva novo usuário
     const novoUsuario = { id: Date.now(), email, senha };
     salvarUsuario(novoUsuario);
-    setMensagem("Cadastro realizado com sucesso!");
-    setTimeout(() => navigate("/login"), 1500);
+
+    // Salva login no localStorage e redireciona automaticamente
+    localStorage.setItem("usuarioLogado", novoUsuario.id);
+    setMensagem("Cadastro realizado com sucesso! Redirecionando...");
+
+    setTimeout(() => navigate("/produtos"), 1000);
   };
 
   return (
