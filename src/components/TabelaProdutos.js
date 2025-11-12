@@ -105,11 +105,10 @@ function TabelaProdutos({ usuarioId }) {
       {/* Cabeçalho */}
       <header className="intro-header">
         <h2 className="intro-logo">Sistema de Patrimônios</h2>
-        <div className="intro-links">
-          <button className="intro-link" onClick={handleSair}>
-            Sair
-          </button>
-        </div>
+        <button onClick={handleLogout} className="logout-button">
+          Sair
+        </button>
+
       </header>
 
       {/* Conteúdo principal com sidebar */}

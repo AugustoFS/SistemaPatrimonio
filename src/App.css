@@ -112,6 +112,29 @@ body {
   color: #63b3ff;
 }
 
+/* Botão de saída (logout) na tela de produtos */
+.logout-button {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #e0e0e0;
+  border-color: #e0e0e0;
+}
+
+.logout-button:active {
+  transform: scale(0.97);
+}
+
 /* =========================================================
    PÁGINA: TABELA DE PRODUTOS
 ========================================================= */
