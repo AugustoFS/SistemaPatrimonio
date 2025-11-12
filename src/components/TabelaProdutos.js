@@ -1,4 +1,3 @@
-// src/components/TabelaProdutos.js
 import React, { useEffect, useState } from "react";
 import "../App.css";
 import {
@@ -106,6 +105,11 @@ function TabelaProdutos({ usuarioId }) {
       {/* Cabeçalho */}
       <header className="intro-header">
         <h2 className="intro-logo">Sistema de Patrimônios</h2>
+        <div className="intro-links">
+          <button className="intro-link" onClick={handleSair}>
+            Sair
+          </button>
+        </div>
       </header>
 
       {/* Conteúdo principal com sidebar */}
@@ -123,9 +127,6 @@ function TabelaProdutos({ usuarioId }) {
           </button>
           <button className="button" onClick={handleConfiguracoes}>
             Configurações
-          </button>
-          <button className="button cancel-button" onClick={handleSair}>
-            Sair
           </button>
         </aside>
 
