@@ -106,6 +106,9 @@ function TabelaProdutos({ usuarioId }) {
       {/* Cabeçalho */}
       <header className="intro-header">
         <h2 className="intro-logo">Sistema de Patrimônios</h2>
+        <button className="intro-link" onClick={handleSair}>
+            Sair
+          </button>
       </header>
 
       {/* Conteúdo principal com sidebar */}
