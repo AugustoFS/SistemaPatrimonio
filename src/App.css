@@ -285,14 +285,14 @@ body {
 }
 
 .intro-link {
-  color: #00bfff;
+  color: #ffffff;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s;
 }
 
 .intro-link:hover {
-  color: #0090d6;
+  color: #b0b0b0;
 }
 
 /* Conteúdo principal */
