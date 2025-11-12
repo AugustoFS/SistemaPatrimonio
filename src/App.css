@@ -64,7 +64,7 @@ body {
   padding: 10px 15px;
   font-size: 15px;
   cursor: pointer;
-  border: 2px solid white;
+  border: 1px solid white;
   /* adiciona borda branca */
   border-radius: 6px;
   background: transparent;
