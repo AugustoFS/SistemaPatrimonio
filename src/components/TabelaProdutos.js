@@ -152,7 +152,7 @@ function TabelaProdutos({ usuarioId }) {
                     <input
                       type="text"
                       name="descricao"
-                      placeholder="Descrição (máx. 120 caracteres)"
+                      placeholder="Descrição"
                       maxLength={120}
                       value={produto.descricao}
                       onChange={handleChange}
@@ -179,14 +179,14 @@ function TabelaProdutos({ usuarioId }) {
                     <input
                       type="text"
                       name="localizacao"
-                      placeholder="Localização (máx. 120 caracteres)"
+                      placeholder="Localização"
                       maxLength={120}
                       value={produto.localizacao}
                       onChange={handleChange}
                     />
 
                     <input
-                      type="text"
+                      type="date"
                       name="aquisicao"
                       placeholder="Aquisição"
                       value={produto.aquisicao}
