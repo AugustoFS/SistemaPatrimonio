@@ -388,25 +388,6 @@ body {
   padding-bottom: 10px;
 }
 
-/*
-.sidebar .button {
-  background: linear-gradient(135deg, #1e90ff, #0066cc);
-  border: none;
-  border-radius: 6px;
-  padding: 10px;
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background 0.3s ease;
-}
-
-.sidebar .button:hover {
-  background: linear-gradient(135deg, #0066cc, #004c99);
-}
-  */
-
 /* =========================
    ÁREA PRINCIPAL DA TABELA (corrigido)
 ========================= */

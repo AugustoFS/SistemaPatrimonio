@@ -140,46 +140,51 @@ function TabelaProdutos({ usuarioId }) {
                   {erro && <div className="error">{erro}</div>}
 
                   <div className="form">
-
                     <input
                       type="text"
                       name="id"
-                      placeholder="ID do Produto"
-                      value={produto.id}
+                      placeholder="ID"
+                      className="input"
+                      value={produto.id || ""}
                       onChange={handleChange}
                     />
 
                     <input
                       type="text"
-                      name="descricao"
-                      placeholder="Descrição"
+                      name="nome"
+                      placeholder="Descrição (até 120 caracteres)"
+                      className="input"
                       maxLength={120}
-                      value={produto.descricao}
+                      value={produto.nome}
                       onChange={handleChange}
                     />
 
                     <input
-                      type="text"
+                      type="number"
                       name="valor"
                       placeholder="Valor (R$)"
+                      className="input"
                       value={produto.valor}
                       onChange={handleChange}
                     />
 
                     <select
                       name="condicao"
+                      className="input"
                       value={produto.condicao}
                       onChange={handleChange}
                     >
-                      <option value="em uso">Em uso</option>
-                      <option value="armazenado">Armazenado</option>
-                      <option value="descartado">Descartado</option>
+                      <option value="">Selecione a condição</option>
+                      <option value="Em uso">Em uso</option>
+                      <option value="Armazenado">Armazenado</option>
+                      <option value="Descartado">Descartado</option>
                     </select>
 
                     <input
                       type="text"
                       name="localizacao"
-                      placeholder="Localização"
+                      placeholder="Localização (até 120 caracteres)"
+                      className="input"
                       maxLength={120}
                       value={produto.localizacao}
                       onChange={handleChange}
@@ -188,11 +193,12 @@ function TabelaProdutos({ usuarioId }) {
                     <input
                       type="date"
                       name="aquisicao"
-                      placeholder="Aquisição"
+                      className="input"
                       value={produto.aquisicao}
                       onChange={handleChange}
                     />
                   </div>
+
 
                   <div style={{ marginTop: "10px", textAlign: "right" }}>
                     <button className="button" onClick={salvar}>Salvar</button>
