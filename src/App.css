@@ -164,7 +164,6 @@ body {
 .produtos-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
   background-color: #1e1e1e;
   border: 1px solid #333;
   border-radius: 6px;
@@ -178,7 +177,6 @@ body {
   border: 1px solid #333;
   text-align: left;
   font-size: 14px;
-  word-break: break-word;
 }
 
 .produtos-table th {
