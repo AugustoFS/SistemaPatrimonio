@@ -102,12 +102,12 @@ function TabelaProdutos({ usuarioId }) {
             <table className="produtos-table produtos-fixa">
               <thead>
                 <tr>
-                  <th style={{ width: "80px" }}>ID</th>
-                  <th style={{ width: "300px" }}>Descrição</th>
-                  <th style={{ width: "120px" }}>Valor</th>
-                  <th style={{ width: "140px" }}>Condição</th>
-                  <th style={{ width: "300px" }}>Localização</th>
-                  <th style={{ width: "140px" }}>Aquisição</th>
+                  <th style={{ width: "18px" }}>ID</th>
+                  <th style={{ width: "180px" }}>Descrição</th>
+                  <th style={{ width: "180px" }}>Valor</th>
+                  <th style={{ width: "180px" }}>Condição</th>
+                  <th style={{ width: "180px" }}>Localização</th>
+                  <th style={{ width: "180px" }}>Aquisição</th>
                 </tr>
               </thead>
               <tbody>
