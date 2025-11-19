@@ -9,8 +9,8 @@ function Introducao() {
             <header className="intro-header">
                 <h2 className="intro-logo">Sistema de Patrimônios</h2>
                 <div className="intro-links">
-                    <Link to="/login" className="intro-link">Entrar</Link>
-                    <Link to="/cadastro" className="intro-link">Cadastrar</Link>
+                    <Link to="/login" className="logout-button">Entrar</Link>
+                    <Link to="/cadastro" className="logout-button">Cadastrar</Link>
                 </div>
             </header>
 
