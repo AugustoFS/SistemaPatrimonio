@@ -5,6 +5,7 @@ import { getProdutos, salvarProduto } from "../utils/storage";
 function TabelaProdutos({ usuarioId }) {
   const [produtos, setProdutos] = useState([]);
   const [produtosFiltrados, setProdutosFiltrados] = useState([]);
+
   const [produto, setProduto] = useState({
     id: "",
     descricao: "",
@@ -13,10 +14,15 @@ function TabelaProdutos({ usuarioId }) {
     localizacao: "",
     aquisicao: "",
   });
+
   const [erro, setErro] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
-
   const [filtroAberto, setFiltroAberto] = useState(false);
+
+  // estados dos filtros
+  const [filtroValor, setFiltroValor] = useState("");
+  const [filtroCondicao, setFiltroCondicao] = useState("");
+  const [filtroAquisicao, setFiltroAquisicao] = useState("");
 
   useEffect(() => {
     if (usuarioId) {
@@ -26,47 +32,76 @@ function TabelaProdutos({ usuarioId }) {
     }
   }, [usuarioId]);
 
-  const aplicarFiltro = (tipo) => {
+  // ==========================================================
+  // EXPORTAÇÃO CSV
+  // ==========================================================
+  const exportarCSV = () => {
+    const linhas = [
+      ["ID", "Descrição", "Valor", "Condição", "Localização", "Aquisição"],
+      ...produtosFiltrados.map((p) => [
+        p.id,
+        p.descricao,
+        p.valor,
+        p.condicao,
+        p.localizacao,
+        p.aquisicao,
+      ]),
+    ];
+
+    const conteudo = linhas.map((l) => l.join(";")).join("\n");
+    const blob = new Blob([conteudo], { type: "text/csv;charset=utf-8;" });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "produtos.csv";
+    link.click();
+  };
+
+  // ==========================================================
+  // FILTRO COMPLETO MULTICATEGORIA
+  // ==========================================================
+  const aplicarFiltros = () => {
     let filtrado = [...produtos];
 
-    switch (tipo) {
-      case "maior":
-        filtrado.sort((a, b) =>
-          Number(a.valor.replace(/\D/g, "")) < Number(b.valor.replace(/\D/g, "")) ? 1 : -1
-        );
-        break;
+    // FILTRO DE VALOR
+    if (filtroValor === "maior") {
+      filtrado.sort((a, b) =>
+        Number(a.valor.replace(/\D/g, "")) < Number(b.valor.replace(/\D/g, "")) ? 1 : -1
+      );
+    }
+    if (filtroValor === "menor") {
+      filtrado.sort((a, b) =>
+        Number(a.valor.replace(/\D/g, "")) > Number(b.valor.replace(/\D/g, "")) ? 1 : -1
+      );
+    }
 
-      case "menor":
-        filtrado.sort((a, b) =>
-          Number(a.valor.replace(/\D/g, "")) > Number(b.valor.replace(/\D/g, "")) ? 1 : -1
-        );
-        break;
+    // FILTRO DE CONDIÇÃO
+    if (filtroCondicao) {
+      filtrado = filtrado.filter((p) => p.condicao === filtroCondicao);
+    }
 
-      case "uso":
-        filtrado = filtrado.filter((p) => p.condicao === "em uso");
-        break;
-
-      case "armazenado":
-        filtrado = filtrado.filter((p) => p.condicao === "armazenado");
-        break;
-
-      case "descartado":
-        filtrado = filtrado.filter((p) => p.condicao === "descartado");
-        break;
-
-      default:
-        filtrado = produtos;
+    // FILTRO DE AQUISIÇÃO
+    if (filtroAquisicao === "recentes") {
+      filtrado.sort((a, b) => (a.aquisicao < b.aquisicao ? 1 : -1));
+    }
+    if (filtroAquisicao === "antigos") {
+      filtrado.sort((a, b) => (a.aquisicao > b.aquisicao ? 1 : -1));
     }
 
     setProdutosFiltrados(filtrado);
     setFiltroAberto(false);
   };
 
-  const resetFiltro = () => {
+  const limparFiltros = () => {
+    setFiltroValor("");
+    setFiltroCondicao("");
+    setFiltroAquisicao("");
     setProdutosFiltrados(produtos);
-    setFiltroAberto(false);
   };
 
+  // ==========================================================
+  // CADASTRO
+  // ==========================================================
   const abrirModal = () => {
     setProduto({
       id: "",
@@ -89,8 +124,8 @@ function TabelaProdutos({ usuarioId }) {
     const { name, value } = e.target;
 
     if (name === "valor") {
-      const somenteNumeros = value.replace(/\D/g, "");
-      const formatado = (Number(somenteNumeros) / 100).toLocaleString("pt-BR", {
+      const numero = value.replace(/\D/g, "");
+      const formatado = (Number(numero) / 100).toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL",
       });
@@ -109,13 +144,9 @@ function TabelaProdutos({ usuarioId }) {
       return;
     }
 
-    const novo = salvarProduto({
-      ...produto,
-      usuarioId,
-    });
+    const novo = salvarProduto({ ...produto, usuarioId });
 
     const novaLista = [...produtos, novo];
-
     setProdutos(novaLista);
     setProdutosFiltrados(novaLista);
 
@@ -131,17 +162,19 @@ function TabelaProdutos({ usuarioId }) {
     <div className="introducao-container">
       <header className="intro-header">
         <h2 className="intro-logo">Sistema de Patrimônios</h2>
-        <button onClick={handleSair} className="logout-button">
-          Sair
-        </button>
+        <button onClick={handleSair} className="logout-button">Sair</button>
       </header>
 
       <div className="conteudo-com-sidebar">
+
+        {/* ================= SIDEBAR ================= */}
         <aside className="sidebar">
           <button className="button" onClick={abrirModal}>Adicionar</button>
           <button className="button" onClick={() => setFiltroAberto(true)}>Filtrar</button>
+          <button className="button" onClick={exportarCSV}>Exportar</button>
         </aside>
 
+        {/* ================= TABELA ================= */}
         <main className="tabela-main">
           <div className="main-content">
             <h2>Produtos</h2>
@@ -149,22 +182,18 @@ function TabelaProdutos({ usuarioId }) {
             <table className="produtos-table produtos-fixa">
               <thead>
                 <tr>
-                  <th style={{ width: "18px" }}>ID</th>
-                  <th style={{ width: "180px" }}>Descrição</th>
-                  <th style={{ width: "180px" }}>Valor</th>
-                  <th style={{ width: "180px" }}>Condição</th>
-                  <th style={{ width: "180px" }}>Localização</th>
-                  <th style={{ width: "180px" }}>Aquisição</th>
+                  <th>ID</th>
+                  <th>Descrição</th>
+                  <th>Valor</th>
+                  <th>Condição</th>
+                  <th>Localização</th>
+                  <th>Aquisição</th>
                 </tr>
               </thead>
 
               <tbody>
                 {produtosFiltrados.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" style={{ textAlign: "center" }}>
-                      Nenhum produto encontrado.
-                    </td>
-                  </tr>
+                  <tr><td colSpan="6" style={{ textAlign: "center" }}>Nenhum produto encontrado.</td></tr>
                 ) : (
                   produtosFiltrados.map((p) => (
                     <tr key={p.id}>
@@ -180,7 +209,9 @@ function TabelaProdutos({ usuarioId }) {
               </tbody>
             </table>
 
-            {/* MODAL DE CADASTRAR */}
+            {/* ==========================================================
+                MODAL DE CADASTRAR
+               ========================================================== */}
             {modalAberto && (
               <div className="modal-overlay">
                 <div className="modal-card">
@@ -190,18 +221,19 @@ function TabelaProdutos({ usuarioId }) {
 
                   <div className="form">
                     <input className="input" type="text" name="id" placeholder="ID do Produto" value={produto.id} onChange={handleChange} />
-                    <input className="input" type="text" name="descricao" placeholder="Descrição" maxLength={120} value={produto.descricao} onChange={handleChange} />
+                    <input className="input" type="text" name="descricao" placeholder="Descrição" value={produto.descricao} onChange={handleChange} />
                     <input className="input" type="text" name="valor" placeholder="Valor (R$)" value={produto.valor} onChange={handleChange} />
                     <select className="input" name="condicao" value={produto.condicao} onChange={handleChange}>
                       <option value="em uso">Em uso</option>
                       <option value="armazenado">Armazenado</option>
                       <option value="descartado">Descartado</option>
                     </select>
-                    <input className="input" type="text" name="localizacao" placeholder="Localização" maxLength={120} value={produto.localizacao} onChange={handleChange} />
+                    <input className="input" type="text" name="localizacao" placeholder="Localização" value={produto.localizacao} onChange={handleChange} />
                     <input className="input" type="date" name="aquisicao" value={produto.aquisicao} onChange={handleChange} />
                   </div>
 
-                  <div style={{ marginTop: "10px", textAlign: "right" }}>
+                  {/* BOTÕES AFASTADOS */}
+                  <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
                     <button className="button" onClick={salvar}>Salvar</button>
                     <button className="button cancel-button" onClick={fecharModal}>Cancelar</button>
                   </div>
@@ -209,30 +241,54 @@ function TabelaProdutos({ usuarioId }) {
               </div>
             )}
 
-            {/* MODAL DE FILTRO */}
+            {/* ==========================================================
+                MODAL DE FILTRO COMPLETO
+               ========================================================== */}
             {filtroAberto && (
               <div className="modal-overlay">
                 <div className="modal-card">
                   <h3>Filtrar Produtos</h3>
 
                   <div className="form">
-                    <button className="button" onClick={() => aplicarFiltro("maior")}>Maior Valor</button>
-                    <button className="button" onClick={() => aplicarFiltro("menor")}>Menor Valor</button>
-                    <button className="button" onClick={() => aplicarFiltro("uso")}>Produtos em uso</button>
-                    <button className="button" onClick={() => aplicarFiltro("armazenado")}>Produtos armazenados</button>
-                    <button className="button" onClick={() => aplicarFiltro("descartado")}>Produtos descartados</button>
+
+                    {/* FILTRO DE VALOR */}
+                    <h4>Valor</h4>
+                    <label><input type="radio" name="valor" checked={filtroValor === "maior"} onChange={() => setFiltroValor("maior")} /> Maior valor</label>
+                    <label><input type="radio" name="valor" checked={filtroValor === "menor"} onChange={() => setFiltroValor("menor")} /> Menor valor</label>
+
+                    <hr />
+
+                    {/* FILTRO DE CONDIÇÃO */}
+                    <h4>Condição</h4>
+                    <label><input type="radio" name="condicao" checked={filtroCondicao === "em uso"} onChange={() => setFiltroCondicao("em uso")} /> Em uso</label>
+                    <label><input type="radio" name="condicao" checked={filtroCondicao === "armazenado"} onChange={() => setFiltroCondicao("armazenado")} /> Armazenado</label>
+                    <label><input type="radio" name="condicao" checked={filtroCondicao === "descartado"} onChange={() => setFiltroCondicao("descartado")} /> Descartado</label>
+
+                    <hr />
+
+                    {/* FILTRO DE AQUISIÇÃO */}
+                    <h4>Aquisição</h4>
+                    <label><input type="radio" name="aq" checked={filtroAquisicao === "recentes"} onChange={() => setFiltroAquisicao("recentes")} /> Mais recentes</label>
+                    <label><input type="radio" name="aq" checked={filtroAquisicao === "antigos"} onChange={() => setFiltroAquisicao("antigos")} /> Mais antigos</label>
                   </div>
 
-                  <div style={{ marginTop: "10px", textAlign: "right" }}>
-                    <button className="button" onClick={resetFiltro}>Limpar filtro</button>
-                    <button className="button cancel-button" onClick={() => setFiltroAberto(false)}>Fechar</button>
+                  {/* BOTÕES AFASTADOS */}
+                  <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
+                    <button className="button" onClick={limparFiltros}>Limpar Filtros</button>
+                    <button className="button cancel-button" onClick={() => setFiltroAberto(false)}>Sair</button>
                   </div>
+
+                  <button className="button" style={{ marginTop: "10px" }} onClick={aplicarFiltros}>
+                    Aplicar Filtros
+                  </button>
+
                 </div>
               </div>
             )}
 
           </div>
         </main>
+
       </div>
 
       <footer className="intro-footer">
