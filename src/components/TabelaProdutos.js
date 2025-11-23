@@ -19,7 +19,6 @@ function TabelaProdutos({ usuarioId }) {
   const [modalAberto, setModalAberto] = useState(false);
   const [filtroAberto, setFiltroAberto] = useState(false);
 
-  // estados dos filtros
   const [filtroValor, setFiltroValor] = useState("");
   const [filtroCondicao, setFiltroCondicao] = useState("");
   const [filtroAquisicao, setFiltroAquisicao] = useState("");
@@ -32,9 +31,7 @@ function TabelaProdutos({ usuarioId }) {
     }
   }, [usuarioId]);
 
-  // ==========================================================
   // EXPORTAÇÃO CSV
-  // ==========================================================
   const exportarCSV = () => {
     const linhas = [
       ["ID", "Descrição", "Valor", "Condição", "Localização", "Aquisição"],
@@ -57,13 +54,10 @@ function TabelaProdutos({ usuarioId }) {
     link.click();
   };
 
-  // ==========================================================
-  // FILTRO COMPLETO MULTICATEGORIA
-  // ==========================================================
+  // APLICAR FILTROS
   const aplicarFiltros = () => {
     let filtrado = [...produtos];
 
-    // FILTRO DE VALOR
     if (filtroValor === "maior") {
       filtrado.sort((a, b) =>
         Number(a.valor.replace(/\D/g, "")) < Number(b.valor.replace(/\D/g, "")) ? 1 : -1
@@ -75,12 +69,10 @@ function TabelaProdutos({ usuarioId }) {
       );
     }
 
-    // FILTRO DE CONDIÇÃO
     if (filtroCondicao) {
       filtrado = filtrado.filter((p) => p.condicao === filtroCondicao);
     }
 
-    // FILTRO DE AQUISIÇÃO
     if (filtroAquisicao === "recentes") {
       filtrado.sort((a, b) => (a.aquisicao < b.aquisicao ? 1 : -1));
     }
@@ -92,6 +84,7 @@ function TabelaProdutos({ usuarioId }) {
     setFiltroAberto(false);
   };
 
+  // LIMPAR FILTROS
   const limparFiltros = () => {
     setFiltroValor("");
     setFiltroCondicao("");
@@ -99,9 +92,7 @@ function TabelaProdutos({ usuarioId }) {
     setProdutosFiltrados(produtos);
   };
 
-  // ==========================================================
-  // CADASTRO
-  // ==========================================================
+  // MODAL DE CADASTRO
   const abrirModal = () => {
     setProduto({
       id: "",
@@ -167,14 +158,14 @@ function TabelaProdutos({ usuarioId }) {
 
       <div className="conteudo-com-sidebar">
 
-        {/* ================= SIDEBAR ================= */}
+        {/* SIDEBAR */}
         <aside className="sidebar">
           <button className="button" onClick={abrirModal}>Adicionar</button>
           <button className="button" onClick={() => setFiltroAberto(true)}>Filtrar</button>
           <button className="button" onClick={exportarCSV}>Exportar</button>
         </aside>
 
-        {/* ================= TABELA ================= */}
+        {/* TABELA */}
         <main className="tabela-main">
           <div className="main-content">
             <h2>Produtos</h2>
@@ -209,13 +200,10 @@ function TabelaProdutos({ usuarioId }) {
               </tbody>
             </table>
 
-            {/* ==========================================================
-                MODAL DE CADASTRAR
-               ========================================================== */}
+            {/* MODAL CADASTRAR */}
             {modalAberto && (
               <div className="modal-overlay">
                 <div className="modal-card">
-                  <h3>Novo Produto</h3>
 
                   {erro && <div className="error">{erro}</div>}
 
@@ -232,7 +220,6 @@ function TabelaProdutos({ usuarioId }) {
                     <input className="input" type="date" name="aquisicao" value={produto.aquisicao} onChange={handleChange} />
                   </div>
 
-                  {/* BOTÕES AFASTADOS */}
                   <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
                     <button className="button" onClick={salvar}>Salvar</button>
                     <button className="button cancel-button" onClick={fecharModal}>Cancelar</button>
@@ -241,46 +228,33 @@ function TabelaProdutos({ usuarioId }) {
               </div>
             )}
 
-            {/* ==========================================================
-                MODAL DE FILTRO COMPLETO
-               ========================================================== */}
+            {/* MODAL FILTROS */}
             {filtroAberto && (
               <div className="modal-overlay">
                 <div className="modal-card">
-                  <h3>Filtrar Produtos</h3>
 
-                  <div className="form">
+                  <div className="form" style={{ textAlign: "left" }}>
 
-                    {/* FILTRO DE VALOR */}
                     <h4>Valor</h4>
-                    <label><input type="radio" name="valor" checked={filtroValor === "maior"} onChange={() => setFiltroValor("maior")} /> Maior valor</label>
-                    <label><input type="radio" name="valor" checked={filtroValor === "menor"} onChange={() => setFiltroValor("menor")} /> Menor valor</label>
+                    <label className="input"><input className="custom-radio" type="radio" name="valor" checked={filtroValor === "maior"} onChange={() => setFiltroValor("maior")} /> Maior valor</label>
+                    <label className="input"><input className="custom-radio" type="radio" name="valor" checked={filtroValor === "menor"} onChange={() => setFiltroValor("menor")} /> Menor valor</label>
 
-                    <hr />
-
-                    {/* FILTRO DE CONDIÇÃO */}
                     <h4>Condição</h4>
-                    <label><input type="radio" name="condicao" checked={filtroCondicao === "em uso"} onChange={() => setFiltroCondicao("em uso")} /> Em uso</label>
-                    <label><input type="radio" name="condicao" checked={filtroCondicao === "armazenado"} onChange={() => setFiltroCondicao("armazenado")} /> Armazenado</label>
-                    <label><input type="radio" name="condicao" checked={filtroCondicao === "descartado"} onChange={() => setFiltroCondicao("descartado")} /> Descartado</label>
+                    <label className="input"><input className="custom-radio" type="radio" name="condicao" checked={filtroCondicao === "em uso"} onChange={() => setFiltroCondicao("em uso")} /> Em uso</label>
+                    <label className="input"><input className="custom-radio" type="radio" name="condicao" checked={filtroCondicao === "armazenado"} onChange={() => setFiltroCondicao("armazenado")} /> Armazenado</label>
+                    <label className="input"><input className="custom-radio" type="radio" name="condicao" checked={filtroCondicao === "descartado"} onChange={() => setFiltroCondicao("descartado")} /> Descartado</label>
 
-                    <hr />
-
-                    {/* FILTRO DE AQUISIÇÃO */}
                     <h4>Aquisição</h4>
-                    <label><input type="radio" name="aq" checked={filtroAquisicao === "recentes"} onChange={() => setFiltroAquisicao("recentes")} /> Mais recentes</label>
-                    <label><input type="radio" name="aq" checked={filtroAquisicao === "antigos"} onChange={() => setFiltroAquisicao("antigos")} /> Mais antigos</label>
+                    <label className="input"><input className="custom-radio" type="radio" name="aq" checked={filtroAquisicao === "recentes"} onChange={() => setFiltroAquisicao("recentes")} /> Mais recentes</label>
+                    <label className="input"><input className="custom-radio" type="radio" name="aq" checked={filtroAquisicao === "antigos"} onChange={() => setFiltroAquisicao("antigos")} /> Mais antigos</label>
                   </div>
 
-                  {/* BOTÕES AFASTADOS */}
+                  {/* BOTÕES LADO A LADO */}
                   <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
                     <button className="button" onClick={limparFiltros}>Limpar Filtros</button>
+                    <button className="button" onClick={aplicarFiltros}>Aplicar Filtros</button>
                     <button className="button cancel-button" onClick={() => setFiltroAberto(false)}>Sair</button>
                   </div>
-
-                  <button className="button" style={{ marginTop: "10px" }} onClick={aplicarFiltros}>
-                    Aplicar Filtros
-                  </button>
 
                 </div>
               </div>
@@ -288,7 +262,6 @@ function TabelaProdutos({ usuarioId }) {
 
           </div>
         </main>
-
       </div>
 
       <footer className="intro-footer">
