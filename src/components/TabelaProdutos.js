@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
-import {
-  getProdutos,
-  salvarProduto,
-} from "../utils/storage";
+import { getProdutos, salvarProduto } from "../utils/storage";
 
 function TabelaProdutos({ usuarioId }) {
   const [produtos, setProdutos] = useState([]);
+  const [produtosFiltrados, setProdutosFiltrados] = useState([]);
   const [produto, setProduto] = useState({
     id: "",
     descricao: "",
@@ -18,11 +16,56 @@ function TabelaProdutos({ usuarioId }) {
   const [erro, setErro] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
 
+  const [filtroAberto, setFiltroAberto] = useState(false);
+
   useEffect(() => {
     if (usuarioId) {
-      setProdutos(getProdutos(usuarioId));
+      const lista = getProdutos(usuarioId);
+      setProdutos(lista);
+      setProdutosFiltrados(lista);
     }
   }, [usuarioId]);
+
+  const aplicarFiltro = (tipo) => {
+    let filtrado = [...produtos];
+
+    switch (tipo) {
+      case "maior":
+        filtrado.sort((a, b) =>
+          Number(a.valor.replace(/\D/g, "")) < Number(b.valor.replace(/\D/g, "")) ? 1 : -1
+        );
+        break;
+
+      case "menor":
+        filtrado.sort((a, b) =>
+          Number(a.valor.replace(/\D/g, "")) > Number(b.valor.replace(/\D/g, "")) ? 1 : -1
+        );
+        break;
+
+      case "uso":
+        filtrado = filtrado.filter((p) => p.condicao === "em uso");
+        break;
+
+      case "armazenado":
+        filtrado = filtrado.filter((p) => p.condicao === "armazenado");
+        break;
+
+      case "descartado":
+        filtrado = filtrado.filter((p) => p.condicao === "descartado");
+        break;
+
+      default:
+        filtrado = produtos;
+    }
+
+    setProdutosFiltrados(filtrado);
+    setFiltroAberto(false);
+  };
+
+  const resetFiltro = () => {
+    setProdutosFiltrados(produtos);
+    setFiltroAberto(false);
+  };
 
   const abrirModal = () => {
     setProduto({
@@ -33,8 +76,8 @@ function TabelaProdutos({ usuarioId }) {
       localizacao: "",
       aquisicao: "",
     });
-    setModalAberto(true);
     setErro("");
+    setModalAberto(true);
   };
 
   const fecharModal = () => {
@@ -45,7 +88,6 @@ function TabelaProdutos({ usuarioId }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Formatar valor em Reais
     if (name === "valor") {
       const somenteNumeros = value.replace(/\D/g, "");
       const formatado = (Number(somenteNumeros) / 100).toLocaleString("pt-BR", {
@@ -72,7 +114,11 @@ function TabelaProdutos({ usuarioId }) {
       usuarioId,
     });
 
-    setProdutos([...produtos, novo]);
+    const novaLista = [...produtos, novo];
+
+    setProdutos(novaLista);
+    setProdutosFiltrados(novaLista);
+
     fecharModal();
   };
 
@@ -93,6 +139,7 @@ function TabelaProdutos({ usuarioId }) {
       <div className="conteudo-com-sidebar">
         <aside className="sidebar">
           <button className="button" onClick={abrirModal}>Adicionar</button>
+          <button className="button" onClick={() => setFiltroAberto(true)}>Filtrar</button>
         </aside>
 
         <main className="tabela-main">
@@ -110,15 +157,16 @@ function TabelaProdutos({ usuarioId }) {
                   <th style={{ width: "180px" }}>Aquisição</th>
                 </tr>
               </thead>
+
               <tbody>
-                {produtos.length === 0 ? (
+                {produtosFiltrados.length === 0 ? (
                   <tr>
                     <td colSpan="6" style={{ textAlign: "center" }}>
-                      Nenhum produto cadastrado.
+                      Nenhum produto encontrado.
                     </td>
                   </tr>
                 ) : (
-                  produtos.map((p) => (
+                  produtosFiltrados.map((p) => (
                     <tr key={p.id}>
                       <td>{p.id}</td>
                       <td>{p.descricao}</td>
@@ -132,6 +180,7 @@ function TabelaProdutos({ usuarioId }) {
               </tbody>
             </table>
 
+            {/* MODAL DE CADASTRAR */}
             {modalAberto && (
               <div className="modal-overlay">
                 <div className="modal-card">
@@ -140,69 +189,43 @@ function TabelaProdutos({ usuarioId }) {
                   {erro && <div className="error">{erro}</div>}
 
                   <div className="form">
-
-                    <input
-                      className="input"
-                      type="text"
-                      name="id"
-                      placeholder="ID do Produto"
-                      value={produto.id}
-                      onChange={handleChange}
-                    />
-
-                    <input
-                      className="input"
-                      type="text"
-                      name="descricao"
-                      placeholder="Descrição"
-                      maxLength={120}
-                      value={produto.descricao}
-                      onChange={handleChange}
-                    />
-
-                    <input
-                      className="input"
-                      type="text"
-                      name="valor"
-                      placeholder="Valor (R$)"
-                      value={produto.valor}
-                      onChange={handleChange}
-                    />
-
-                    <select
-                      className="input"
-                      name="condicao"
-                      value={produto.condicao}
-                      onChange={handleChange}
-                    >
+                    <input className="input" type="text" name="id" placeholder="ID do Produto" value={produto.id} onChange={handleChange} />
+                    <input className="input" type="text" name="descricao" placeholder="Descrição" maxLength={120} value={produto.descricao} onChange={handleChange} />
+                    <input className="input" type="text" name="valor" placeholder="Valor (R$)" value={produto.valor} onChange={handleChange} />
+                    <select className="input" name="condicao" value={produto.condicao} onChange={handleChange}>
                       <option value="em uso">Em uso</option>
                       <option value="armazenado">Armazenado</option>
                       <option value="descartado">Descartado</option>
                     </select>
-
-                    <input
-                      className="input"
-                      type="text"
-                      name="localizacao"
-                      placeholder="Localização"
-                      maxLength={120}
-                      value={produto.localizacao}
-                      onChange={handleChange}
-                    />
-
-                    <input
-                      className="input"
-                      type="date"
-                      name="aquisicao"
-                      placeholder="Aquisição"
-                      value={produto.aquisicao}
-                      onChange={handleChange}
-                    />
+                    <input className="input" type="text" name="localizacao" placeholder="Localização" maxLength={120} value={produto.localizacao} onChange={handleChange} />
+                    <input className="input" type="date" name="aquisicao" value={produto.aquisicao} onChange={handleChange} />
                   </div>
 
                   <div style={{ marginTop: "10px", textAlign: "right" }}>
                     <button className="button" onClick={salvar}>Salvar</button>
                     <button className="button cancel-button" onClick={fecharModal}>Cancelar</button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* MODAL DE FILTRO */}
+            {filtroAberto && (
+              <div className="modal-overlay">
+                <div className="modal-card">
+                  <h3>Filtrar Produtos</h3>
+
+                  <div className="form">
+                    <button className="button" onClick={() => aplicarFiltro("maior")}>Maior Valor</button>
+                    <button className="button" onClick={() => aplicarFiltro("menor")}>Menor Valor</button>
+                    <button className="button" onClick={() => aplicarFiltro("uso")}>Produtos em uso</button>
+                    <button className="button" onClick={() => aplicarFiltro("armazenado")}>Produtos armazenados</button>
+                    <button className="button" onClick={() => aplicarFiltro("descartado")}>Produtos descartados</button>
+                  </div>
+
+                  <div style={{ marginTop: "10px", textAlign: "right" }}>
+                    <button className="button" onClick={resetFiltro}>Limpar filtro</button>
+                    <button className="button cancel-button" onClick={() => setFiltroAberto(false)}>Fechar</button>
                   </div>
                 </div>
               </div>
