@@ -17,6 +17,10 @@ function TabelaProdutos({ usuarioId }) {
 
   const [erro, setErro] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
+  const [modalTransferencia, setModalTransferencia] = useState(false);
+
+  const [modoTransferencia, setModoTransferencia] = useState(false);
+
   const [filtroAberto, setFiltroAberto] = useState(false);
   const [filtroValor, setFiltroValor] = useState("");
   const [filtroCondicao, setFiltroCondicao] = useState("");
@@ -91,8 +95,9 @@ function TabelaProdutos({ usuarioId }) {
     setProdutosFiltrados(produtos);
   };
 
-  // MODAL DE CADASTRO
+  // MODAL ADICIONAR PRODUTO
   const abrirModal = () => {
+    setModoTransferencia(false);
     setProduto({
       id: "",
       descricao: "",
@@ -143,6 +148,30 @@ function TabelaProdutos({ usuarioId }) {
     fecharModal();
   };
 
+  // MODO TRANSFERÊNCIA
+  const iniciarTransferencia = () => {
+    setModoTransferencia(true);
+    alert("Selecione um produto na tabela para transferir/editar.");
+  };
+
+  const selecionarProdutoTransferencia = (p) => {
+    if (!modoTransferencia) return;
+
+    setProduto(p);
+    setModalTransferencia(true);
+  };
+
+  const salvarTransferencia = () => {
+    const listaAtualizada = produtos.map((p) =>
+      p.id === produto.id ? produto : p
+    );
+
+    setProdutos(listaAtualizada);
+    setProdutosFiltrados(listaAtualizada);
+    setModalTransferencia(false);
+    setModoTransferencia(false);
+  };
+
   const handleSair = () => {
     localStorage.removeItem("usuarioLogado");
     window.location.href = "/";
@@ -160,7 +189,11 @@ function TabelaProdutos({ usuarioId }) {
         {/* SIDEBAR */}
         <aside className="sidebar">
           <button className="button" onClick={abrirModal}>Adicionar</button>
-          <button className="button" onClick={() => alert("Função de transferência ainda não implementada")}>Transferência</button>
+
+          <button className="button" onClick={iniciarTransferencia}>
+            Transferência
+          </button>
+
           <button className="button" onClick={() => setFiltroAberto(true)}>Filtrar</button>
           <button className="button" onClick={exportarCSV}>Exportar</button>
         </aside>
@@ -187,7 +220,11 @@ function TabelaProdutos({ usuarioId }) {
                   <tr><td colSpan="6" style={{ textAlign: "center" }}>Nenhum produto encontrado.</td></tr>
                 ) : (
                   produtosFiltrados.map((p) => (
-                    <tr key={p.id}>
+                    <tr
+                      key={p.id}
+                      className={modoTransferencia ? "linha-transferencia" : ""}
+                      onClick={() => selecionarProdutoTransferencia(p)}
+                    >
                       <td>{p.id}</td>
                       <td>{p.descricao}</td>
                       <td>{p.valor}</td>
@@ -200,7 +237,7 @@ function TabelaProdutos({ usuarioId }) {
               </tbody>
             </table>
 
-            {/* MODAL CADASTRAR */}
+            {/* MODAL CADASTRO */}
             {modalAberto && (
               <div className="modal-overlay">
                 <div className="modal-card">
@@ -228,6 +265,35 @@ function TabelaProdutos({ usuarioId }) {
               </div>
             )}
 
+            {/* MODAL TRANSFERÊNCIA (EDIÇÃO SEM ALTERAR ID) */}
+            {modalTransferencia && (
+              <div className="modal-overlay">
+                <div className="modal-card">
+
+                  <h3>Transferência / Edição</h3>
+
+                  <div className="form">
+                    <input className="input" type="text" name="id" value={produto.id} disabled />
+                    <input className="input" type="text" name="descricao" value={produto.descricao} onChange={handleChange} />
+                    <input className="input" type="text" name="valor" value={produto.valor} onChange={handleChange} />
+                    <select className="input" name="condicao" value={produto.condicao} onChange={handleChange}>
+                      <option value="em uso">Em uso</option>
+                      <option value="armazenado">Armazenado</option>
+                      <option value="descartado">Descartado</option>
+                    </select>
+                    <input className="input" type="text" name="localizacao" value={produto.localizacao} onChange={handleChange} />
+                    <input className="input" type="date" name="aquisicao" value={produto.aquisicao} onChange={handleChange} />
+                  </div>
+
+                  <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
+                    <button className="button" onClick={salvarTransferencia}>Salvar Transferência</button>
+                    <button className="button cancel-button" onClick={() => setModalTransferencia(false)}>Cancelar</button>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
             {/* MODAL FILTROS */}
             {filtroAberto && (
               <div className="modal-overlay">
@@ -249,7 +315,6 @@ function TabelaProdutos({ usuarioId }) {
                     <label className="input"><input className="custom-radio" type="radio" name="aq" checked={filtroAquisicao === "antigos"} onChange={() => setFiltroAquisicao("antigos")} /> Mais antigos</label>
                   </div>
 
-                  {/* BOTÕES LADO A LADO */}
                   <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
                     <button className="button" onClick={limparFiltros}>Limpar Filtros</button>
                     <button className="button" onClick={aplicarFiltros}>Aplicar Filtros</button>
