@@ -18,7 +18,6 @@ function TabelaProdutos({ usuarioId }) {
   const [erro, setErro] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
   const [filtroAberto, setFiltroAberto] = useState(false);
-
   const [filtroValor, setFiltroValor] = useState("");
   const [filtroCondicao, setFiltroCondicao] = useState("");
   const [filtroAquisicao, setFiltroAquisicao] = useState("");
@@ -161,6 +160,7 @@ function TabelaProdutos({ usuarioId }) {
         {/* SIDEBAR */}
         <aside className="sidebar">
           <button className="button" onClick={abrirModal}>Adicionar</button>
+          <button className="button" onClick={() => alert("Função de transferência ainda não implementada")}>Transferência</button>
           <button className="button" onClick={() => setFiltroAberto(true)}>Filtrar</button>
           <button className="button" onClick={exportarCSV}>Exportar</button>
         </aside>
