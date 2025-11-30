@@ -270,8 +270,6 @@ function TabelaProdutos({ usuarioId }) {
               <div className="modal-overlay">
                 <div className="modal-card">
 
-                  <h3>Transferência / Edição</h3>
-
                   <div className="form">
                     <input className="input" type="text" name="id" value={produto.id} disabled />
                     <input className="input" type="text" name="descricao" value={produto.descricao} onChange={handleChange} />
