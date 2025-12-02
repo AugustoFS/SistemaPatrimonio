@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUsuarios, salvarUsuario } from "../utils/storage";
 import "../App.css";
 
 const Cadastro = () => {
@@ -9,31 +8,46 @@ const Cadastro = () => {
   const [mensagem, setMensagem] = useState("");
   const navigate = useNavigate();
 
-  const handleCadastro = (e) => {
+  const handleCadastro = async (e) => {
     e.preventDefault();
-    const usuarios = getUsuarios();
 
-    if (usuarios.find((u) => u.email === email)) {
-      setMensagem("Usuário já cadastrado.");
-      return;
+    try {
+      const response = await fetch(
+        "https://sistema-patrimonio.vercel.app/api/usuarios",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, senha }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMensagem(data.erro || "Erro ao cadastrar.");
+        return;
+      }
+
+      // Salva usuário logado
+      localStorage.setItem("usuarioLogado", data.usuario_id);
+
+      setMensagem("Cadastro realizado com sucesso!");
+      setTimeout(() => navigate("/produtos"), 1200);
+    } catch (error) {
+      console.error(error);
+      setMensagem("Erro ao conectar ao servidor.");
     }
-
-    const novoUsuario = { id: Date.now(), email, senha };
-    salvarUsuario(novoUsuario);
-    setMensagem("Cadastro realizado com sucesso!");
-    setTimeout(() => navigate("/produtos"), 1500);
   };
 
   return (
     <div className="introducao-container">
-      {/* Cabeçalho */}
       <header className="intro-header">
         <h2 className="intro-logo">Sistema de Patrimônios</h2>
       </header>
 
-      {/* Conteúdo existente */}
       <div className="container">
         <h2>Cadastrar</h2>
+
         <form onSubmit={handleCadastro} className="form">
           <input
             type="email"
@@ -43,6 +57,7 @@ const Cadastro = () => {
             onChange={(e) => setEmail(e.target.value)}
             className="input"
           />
+
           <input
             type="password"
             placeholder="Senha"
@@ -51,17 +66,19 @@ const Cadastro = () => {
             onChange={(e) => setSenha(e.target.value)}
             className="input"
           />
-          <button type="submit" className="button">Cadastrar</button>
+
+          <button type="submit" className="button">
+            Cadastrar
+          </button>
         </form>
 
         {mensagem && <p className="message">{mensagem}</p>}
 
         <button onClick={() => navigate("/login")} className="toggle">
-          Já tem conta? Faça sua Entrada
+          Já tem conta? Faça login
         </button>
       </div>
 
-      {/* Rodapé */}
       <footer className="intro-footer">
         <p>© Sistema de Patrimônios 2025</p>
       </footer>
