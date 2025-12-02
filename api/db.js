@@ -1,7 +1,10 @@
-import pkg from "pg";
-const { Pool } = pkg;
+import { Pool } from "pg";
 
-export const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
+
+export default pool;
