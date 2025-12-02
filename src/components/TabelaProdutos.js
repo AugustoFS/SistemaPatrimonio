@@ -73,7 +73,7 @@ function TabelaProdutos({ usuarioId }) {
     if (filtroValor === "maior") {
       filtrado.sort((a, b) =>
         Number(a.valor.replace(/\D/g, "")) <
-        Number(b.valor.replace(/\D/g, ""))
+          Number(b.valor.replace(/\D/g, ""))
           ? 1
           : -1
       );
@@ -82,7 +82,7 @@ function TabelaProdutos({ usuarioId }) {
     if (filtroValor === "menor") {
       filtrado.sort((a, b) =>
         Number(a.valor.replace(/\D/g, "")) >
-        Number(b.valor.replace(/\D/g, ""))
+          Number(b.valor.replace(/\D/g, ""))
           ? 1
           : -1
       );
@@ -157,7 +157,8 @@ function TabelaProdutos({ usuarioId }) {
       return;
     }
 
-    setProduto({ ...produto, [name]: value });
+    setProduto((prev) => ({ ...prev, [name]: value }));
+
   };
 
   // ============================
@@ -339,8 +340,7 @@ function TabelaProdutos({ usuarioId }) {
                       name="descricao"
                       placeholder="Descrição"
                       value={produto.descricao}
-                      on
-Change={handleChange}
+                      onChange={handleChange}
                     />
 
                     <input
