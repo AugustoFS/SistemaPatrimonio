@@ -30,7 +30,7 @@ function TabelaProdutos({ usuarioId }) {
   // ============================
   useEffect(() => {
     if (usuarioId) {
-      fetch(`/api/produtos?usuarioId=${usuarioId}`)
+      fetch(`/api/produtos?usuario_id=${usuarioId}`) // <-- ALTERADO
         .then((r) => r.json())
         .then((data) => {
           setProdutos(data);
@@ -72,11 +72,21 @@ function TabelaProdutos({ usuarioId }) {
     let filtrado = [...produtos];
 
     if (filtroValor === "maior") {
-      filtrado.sort((a, b) => Number(a.valor.replace(/\D/g, "")) < Number(b.valor.replace(/\D/g, "")) ? 1 : -1);
+      filtrado.sort((a, b) =>
+        Number(a.valor.replace(/\D/g, "")) <
+          Number(b.valor.replace(/\D/g, ""))
+          ? 1
+          : -1
+      );
     }
 
     if (filtroValor === "menor") {
-      filtrado.sort((a, b) => Number(a.valor.replace(/\D/g, "")) > Number(b.valor.replace(/\D/g, "")) ? 1 : -1);
+      filtrado.sort((a, b) =>
+        Number(a.valor.replace(/\D/g, "")) >
+          Number(b.valor.replace(/\D/g, ""))
+          ? 1
+          : -1
+      );
     }
 
     if (filtroCondicao) {
@@ -147,9 +157,10 @@ function TabelaProdutos({ usuarioId }) {
   //      SALVAR NO BANCO
   // ============================
   const salvar = async () => {
-    const { id, descricao, valor, condicao, localizacao, aquisicao } = produto;
+    const { descricao, valor, condicao, localizacao, aquisicao } = produto;
 
-    if (!id || !descricao || !valor || !condicao || !localizacao || !aquisicao) {
+    // ID NÃO É OBRIGATÓRIO NO BANCO (gerado automaticamente) — REMOVIDO
+    if (!descricao || !valor || !condicao || !localizacao || !aquisicao) {
       setErro("Todos os campos são obrigatórios.");
       return;
     }
@@ -158,8 +169,22 @@ function TabelaProdutos({ usuarioId }) {
       const resp = await fetch("/api/produtos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...produto, usuarioId })
+        body: JSON.stringify({
+          descricao,
+          valor,
+          condicao,
+          localizacao,
+          aquisicao,
+          usuario_id: usuarioId, // <-- ALTERADO
+        }),
       });
+
+      if (!resp.ok) {
+        const erro = await resp.json();
+        console.error("Erro do servidor:", erro);
+        setErro("Erro ao cadastrar produto.");
+        return;
+      }
 
       const novoProduto = await resp.json();
 
@@ -194,12 +219,14 @@ function TabelaProdutos({ usuarioId }) {
       const resp = await fetch(`/api/produtos?id=${produto.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(produto),
+        body: JSON.stringify({ ...produto, usuario_id: usuarioId }), // <-- ALTERADO
       });
 
       const atualizado = await resp.json();
 
-      const listaAtualizada = produtos.map((p) => (p.id === atualizado.id ? atualizado : p));
+      const listaAtualizada = produtos.map((p) =>
+        p.id === atualizado.id ? atualizado : p
+      );
 
       setProdutos(listaAtualizada);
       setProdutosFiltrados(listaAtualizada);
@@ -221,21 +248,28 @@ function TabelaProdutos({ usuarioId }) {
     <div className="introducao-container">
       <header className="intro-header">
         <h2 className="intro-logo">Sistema de Patrimônios</h2>
-        <button onClick={handleSair} className="logout-button">Sair</button>
+        <button onClick={handleSair} className="logout-button">
+          Sair
+        </button>
       </header>
 
       <div className="conteudo-com-sidebar">
-
         {/* SIDEBAR */}
         <aside className="sidebar">
-          <button className="button" onClick={abrirModal}>Adicionar</button>
+          <button className="button" onClick={abrirModal}>
+            Adicionar
+          </button>
 
           <button className="button" onClick={iniciarTransferencia}>
             Transferência
           </button>
 
-          <button className="button" onClick={() => setFiltroAberto(true)}>Filtrar</button>
-          <button className="button" onClick={exportarCSV}>Exportar</button>
+          <button className="button" onClick={() => setFiltroAberto(true)}>
+            Filtrar
+          </button>
+          <button className="button" onClick={exportarCSV}>
+            Exportar
+          </button>
         </aside>
 
         {/* TABELA */}
@@ -257,7 +291,11 @@ function TabelaProdutos({ usuarioId }) {
 
               <tbody>
                 {produtosFiltrados.length === 0 ? (
-                  <tr><td colSpan="6" style={{ textAlign: "center" }}>Nenhum produto encontrado.</td></tr>
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: "center" }}>
+                      Nenhum produto encontrado.
+                    </td>
+                  </tr>
                 ) : (
                   produtosFiltrados.map((p) => (
                     <tr
@@ -281,53 +319,143 @@ function TabelaProdutos({ usuarioId }) {
             {modalAberto && (
               <div className="modal-overlay">
                 <div className="modal-card">
-
                   {erro && <div className="error">{erro}</div>}
 
                   <div className="form">
-                    <input className="input" type="text" name="id" placeholder="ID do Produto" value={produto.id} onChange={handleChange} />
-                    <input className="input" type="text" name="descricao" placeholder="Descrição" value={produto.descricao} onChange={handleChange} />
-                    <input className="input" type="text" name="valor" placeholder="Valor (R$)" value={produto.valor} onChange={handleChange} />
-                    <select className="input" name="condicao" value={produto.condicao} onChange={handleChange}>
+                    <input
+                      className="input"
+                      type="text"
+                      name="descricao"
+                      placeholder="Descrição"
+                      value={produto.descricao}
+                      onChange={handleChange}
+                    />
+
+                    <input
+                      className="input"
+                      type="text"
+                      name="valor"
+                      placeholder="Valor (R$)"
+                      value={produto.valor}
+                      onChange={handleChange}
+                    />
+
+                    <select
+                      className="input"
+                      name="condicao"
+                      value={produto.condicao}
+                      onChange={handleChange}
+                    >
                       <option value="em uso">Em uso</option>
                       <option value="armazenado">Armazenado</option>
                       <option value="descartado">Descartado</option>
                     </select>
-                    <input className="input" type="text" name="localizacao" placeholder="Localização" value={produto.localizacao} onChange={handleChange} />
-                    <input className="input" type="date" name="aquisicao" value={produto.aquisicao} onChange={handleChange} />
+
+                    <input
+                      className="input"
+                      type="text"
+                      name="localizacao"
+                      placeholder="Localização"
+                      value={produto.localizacao}
+                      onChange={handleChange}
+                    />
+
+                    <input
+                      className="input"
+                      type="date"
+                      name="aquisicao"
+                      value={produto.aquisicao}
+                      onChange={handleChange}
+                    />
                   </div>
 
-                  <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
-                    <button className="button" onClick={salvar}>Salvar</button>
-                    <button className="button cancel-button" onClick={fecharModal}>Cancelar</button>
+                  <div
+                    style={{
+                      marginTop: "20px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <button className="button" onClick={salvar}>
+                      Salvar
+                    </button>
+                    <button className="button cancel-button" onClick={fecharModal}>
+                      Cancelar
+                    </button>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* MODAL TRANSFERÊNCIA (EDIÇÃO SEM ALTERAR ID) */}
+            {/* MODAL TRANSFERÊNCIA */}
             {modalTransferencia && (
               <div className="modal-overlay">
                 <div className="modal-card">
-
                   <div className="form">
-                    <input className="input" type="text" name="id" value={produto.id} disabled />
-                    <input className="input" type="text" name="descricao" value={produto.descricao} onChange={handleChange} />
-                    <input className="input" type="text" name="valor" value={produto.valor} onChange={handleChange} />
-                    <select className="input" name="condicao" value={produto.condicao} onChange={handleChange}>
+                    <input
+                      className="input"
+                      type="text"
+                      name="id"
+                      value={produto.id}
+                      disabled
+                    />
+                    <input
+                      className="input"
+                      type="text"
+                      name="descricao"
+                      value={produto.descricao}
+                      onChange={handleChange}
+                    />
+                    <input
+                      className="input"
+                      type="text"
+                      name="valor"
+                      value={produto.valor}
+                      onChange={handleChange}
+                    />
+                    <select
+                      className="input"
+                      name="condicao"
+                      value={produto.condicao}
+                      onChange={handleChange}
+                    >
                       <option value="em uso">Em uso</option>
                       <option value="armazenado">Armazenado</option>
                       <option value="descartado">Descartado</option>
                     </select>
-                    <input className="input" type="text" name="localizacao" value={produto.localizacao} onChange={handleChange} />
-                    <input className="input" type="date" name="aquisicao" value={produto.aquisicao} onChange={handleChange} />
+                    <input
+                      className="input"
+                      type="text"
+                      name="localizacao"
+                      value={produto.localizacao}
+                      onChange={handleChange}
+                    />
+                    <input
+                      className="input"
+                      type="date"
+                      name="aquisicao"
+                      value={produto.aquisicao}
+                      onChange={handleChange}
+                    />
                   </div>
 
-                  <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
-                    <button className="button" onClick={salvarTransferencia}>Salvar Transferência</button>
-                    <button className="button cancel-button" onClick={() => setModalTransferencia(false)}>Cancelar</button>
+                  <div
+                    style={{
+                      marginTop: "20px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <button className="button" onClick={salvarTransferencia}>
+                      Salvar Transferência
+                    </button>
+                    <button
+                      className="button cancel-button"
+                      onClick={() => setModalTransferencia(false)}
+                    >
+                      Cancelar
+                    </button>
                   </div>
-
                 </div>
               </div>
             )}
@@ -336,33 +464,107 @@ function TabelaProdutos({ usuarioId }) {
             {filtroAberto && (
               <div className="modal-overlay">
                 <div className="modal-card">
-
                   <div className="form" style={{ textAlign: "left" }}>
-
                     <h4>Valor</h4>
-                    <label className="input"><input className="custom-radio" type="radio" name="valor" checked={filtroValor === "maior"} onChange={() => setFiltroValor("maior")} /> Maior valor</label>
-                    <label className="input"><input className="custom-radio" type="radio" name="valor" checked={filtroValor === "menor"} onChange={() => setFiltroValor("menor")} /> Menor valor</label>
+                    <label className="input">
+                      <input
+                        className="custom-radio"
+                        type="radio"
+                        name="valor"
+                        checked={filtroValor === "maior"}
+                        onChange={() => setFiltroValor("maior")}
+                      />{" "}
+                      Maior valor
+                    </label>
+                    <label className="input">
+                      <input
+                        className="custom-radio"
+                        type="radio"
+                        name="valor"
+                        checked={filtroValor === "menor"}
+                        onChange={() => setFiltroValor("menor")}
+                      />{" "}
+                      Menor valor
+                    </label>
 
                     <h4>Condição</h4>
-                    <label className="input"><input className="custom-radio" type="radio" name="condicao" checked={filtroCondicao === "em uso"} onChange={() => setFiltroCondicao("em uso")} /> Em uso</label>
-                    <label className="input"><input className="custom-radio" type="radio" name="condicao" checked={filtroCondicao === "armazenado"} onChange={() => setFiltroCondicao("armazenado")} /> Armazenado</label>
-                    <label className="input"><input className="custom-radio" type="radio" name="condicao" checked={filtroCondicao === "descartado"} onChange={() => setFiltroCondicao("descartado")} /> Descartado</label>
+                    <label className="input">
+                      <input
+                        className="custom-radio"
+                        type="radio"
+                        name="condicao"
+                        checked={filtroCondicao === "em uso"}
+                        onChange={() => setFiltroCondicao("em uso")}
+                      />{" "}
+                      Em uso
+                    </label>
+                    <label className="input">
+                      <input
+                        className="custom-radio"
+                        type="radio"
+                        name="condicao"
+                        checked={filtroCondicao === "armazenado"}
+                        onChange={() => setFiltroCondicao("armazenado")}
+                      />{" "}
+                      Armazenado
+                    </label>
+                    <label className="input">
+                      <input
+                        className="custom-radio"
+                        type="radio"
+                        name="condicao"
+                        checked={filtroCondicao === "descartado"}
+                        onChange={() => setFiltroCondicao("descartado")}
+                      />{" "}
+                      Descartado
+                    </label>
 
                     <h4>Aquisição</h4>
-                    <label className="input"><input className="custom-radio" type="radio" name="aq" checked={filtroAquisicao === "recentes"} onChange={() => setFiltroAquisicao("recentes")} /> Mais recentes</label>
-                    <label className="input"><input className="custom-radio" type="radio" name="aq" checked={filtroAquisicao === "antigos"} onChange={() => setFiltroAquisicao("antigos")} /> Mais antigos</label>
+                    <label className="input">
+                      <input
+                        className="custom-radio"
+                        type="radio"
+                        name="aq"
+                        checked={filtroAquisicao === "recentes"}
+                        onChange={() => setFiltroAquisicao("recentes")}
+                      />{" "}
+                      Mais recentes
+                    </label>
+                    <label className="input">
+                      <input
+                        className="custom-radio"
+                        type="radio"
+                        name="aq"
+                        checked={filtroAquisicao === "antigos"}
+                        onChange={() => setFiltroAquisicao("antigos")}
+                      />{" "}
+                      Mais antigos
+                    </label>
                   </div>
 
-                  <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
-                    <button className="button" onClick={limparFiltros}>Limpar Filtros</button>
-                    <button className="button" onClick={aplicarFiltros}>Aplicar Filtros</button>
-                    <button className="button cancel-button" onClick={() => setFiltroAberto(false)}>Sair</button>
+                  <div
+                    style={{
+                      marginTop: "20px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <button className="button" onClick={limparFiltros}>
+                      Limpar Filtros
+                    </button>
+                    <button className="button" onClick={aplicarFiltros}>
+                      Aplicar Filtros
+                    </button>
+                    <button
+                      className="button cancel-button"
+                      onClick={() => setFiltroAberto(false)}
+                    >
+                      Sair
+                    </button>
                   </div>
-
                 </div>
               </div>
             )}
-
           </div>
         </main>
       </div>
