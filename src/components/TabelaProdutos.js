@@ -165,45 +165,46 @@ function TabelaProdutos({ usuarioId }) {
   //     SALVAR NO BANCO
   // ============================
   const salvar = async () => {
-  const { identificador, descricao, valor, condicao, localizacao, aquisicao } =
-    produto;
+    const { identificador, descricao, valor, condicao, localizacao, aquisicao } =
+      produto;
 
-  if (!identificador || !descricao || !valor || !condicao || !localizacao || !aquisicao) {
-    setErro("Todos os campos são obrigatórios.");
-    return;
-  }
-
-  try {
-    const resp = await fetch(`/api/produtos?usuario_id=${usuarioId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        identificador,
-        descricao,
-        valor,
-        condicao,
-        localizacao,
-        aquisicao
-      })
-    });
-
-    if (!resp.ok) {
-      setErro("Erro ao cadastrar produto.");
+    if (!identificador || !descricao || !valor || !condicao || !localizacao || !aquisicao) {
+      setErro("Todos os campos são obrigatórios.");
       return;
     }
 
-    const novoProduto = await resp.json();
+    try {
+      const resp = await fetch(`/api/produtos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          identificador,
+          descricao,
+          valor,
+          condicao,
+          localizacao,
+          aquisicao,
+          usuario_id: usuarioId   // 🔥 ENVIO CORRETO DO USUÁRIO
+        })
+      });
 
-    const novaLista = [...produtos, novoProduto];
-    setProdutos(novaLista);
-    setProdutosFiltrados(novaLista);
+      if (!resp.ok) {
+        setErro("Erro ao cadastrar produto.");
+        return;
+      }
 
-    fecharModal();
-  } catch (err) {
-    console.error(err);
-    setErro("Erro ao salvar produto.");
-  }
-};
+      const novoProduto = await resp.json();
+
+      const novaLista = [...produtos, novoProduto];
+      setProdutos(novaLista);
+      setProdutosFiltrados(novaLista);
+
+      fecharModal();
+    } catch (err) {
+      console.error(err);
+      setErro("Erro ao salvar produto.");
+    }
+  };
 
 
   // ============================
@@ -225,8 +226,16 @@ function TabelaProdutos({ usuarioId }) {
       const resp = await fetch(`/api/produtos?id=${produto.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...produto, usuario_id: usuarioId }),
+        body: JSON.stringify({
+          ...produto,
+          usuario_id: usuarioId   // 🔥 ENVIO CORRETO DO USUÁRIO TAMBÉM AQUI
+        }),
       });
+
+      if (!resp.ok) {
+        alert("Erro ao salvar transferência.");
+        return;
+      }
 
       const atualizado = await resp.json();
 
@@ -240,9 +249,11 @@ function TabelaProdutos({ usuarioId }) {
       setModalTransferencia(false);
       setModoTransferencia(false);
     } catch (err) {
+      console.error(err);
       alert("Erro ao salvar transferência.");
     }
   };
+
 
   const handleSair = () => {
     localStorage.removeItem("usuarioLogado");
