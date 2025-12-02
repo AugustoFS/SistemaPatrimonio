@@ -6,7 +6,6 @@ function TabelaProdutos({ usuarioId }) {
   const [produtosFiltrados, setProdutosFiltrados] = useState([]);
 
   const [produto, setProduto] = useState({
-    id: "",
     descricao: "",
     valor: "",
     condicao: "em uso",
@@ -17,7 +16,6 @@ function TabelaProdutos({ usuarioId }) {
   const [erro, setErro] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
   const [modalTransferencia, setModalTransferencia] = useState(false);
-
   const [modoTransferencia, setModoTransferencia] = useState(false);
 
   const [filtroAberto, setFiltroAberto] = useState(false);
@@ -29,100 +27,16 @@ function TabelaProdutos({ usuarioId }) {
   //     BUSCAR PRODUTOS DB
   // ============================
   useEffect(() => {
-    if (usuarioId) {
-      fetch(`/api/produtos?usuarioId=${usuarioId}`)
-        .then((r) => r.json())
-        .then((data) => {
-          setProdutos(data);
-          setProdutosFiltrados(data);
-        })
-        .catch((err) => console.error("Erro ao carregar produtos:", err));
-    }
+    if (!usuarioId) return;
+
+    fetch(`/api/produtos?usuario_id=${usuarioId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setProdutos(data);
+        setProdutosFiltrados(data);
+      })
+      .catch((err) => console.error("Erro ao carregar produtos:", err));
   }, [usuarioId]);
-
-  // ============================
-  //        EXPORTAÇÃO CSV
-  // ============================
-  const exportarCSV = () => {
-    const linhas = [
-      ["ID", "Descrição", "Valor", "Condição", "Localização", "Aquisição"],
-      ...produtosFiltrados.map((p) => [
-        p.id,
-        p.descricao,
-        p.valor,
-        p.condicao,
-        p.localizacao,
-        p.aquisicao,
-      ]),
-    ];
-
-    const conteudo = linhas.map((l) => l.join(";")).join("\n");
-    const blob = new Blob([conteudo], { type: "text/csv;charset=utf-8;" });
-
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "produtos.csv";
-    link.click();
-  };
-
-  // ============================
-  //         FILTROS
-  // ============================
-  const aplicarFiltros = () => {
-    let filtrado = [...produtos];
-
-    if (filtroValor === "maior") {
-      filtrado.sort((a, b) => Number(a.valor.replace(/\D/g, "")) < Number(b.valor.replace(/\D/g, "")) ? 1 : -1);
-    }
-
-    if (filtroValor === "menor") {
-      filtrado.sort((a, b) => Number(a.valor.replace(/\D/g, "")) > Number(b.valor.replace(/\D/g, "")) ? 1 : -1);
-    }
-
-    if (filtroCondicao) {
-      filtrado = filtrado.filter((p) => p.condicao === filtroCondicao);
-    }
-
-    if (filtroAquisicao === "recentes") {
-      filtrado.sort((a, b) => (a.aquisicao < b.aquisicao ? 1 : -1));
-    }
-
-    if (filtroAquisicao === "antigos") {
-      filtrado.sort((a, b) => (a.aquisicao > b.aquisicao ? 1 : -1));
-    }
-
-    setProdutosFiltrados(filtrado);
-    setFiltroAberto(false);
-  };
-
-  const limparFiltros = () => {
-    setFiltroValor("");
-    setFiltroCondicao("");
-    setFiltroAquisicao("");
-    setProdutosFiltrados(produtos);
-  };
-
-  // ============================
-  //         MODAL
-  // ============================
-  const abrirModal = () => {
-    setModoTransferencia(false);
-    setProduto({
-      id: "",
-      descricao: "",
-      valor: "",
-      condicao: "em uso",
-      localizacao: "",
-      aquisicao: "",
-    });
-    setErro("");
-    setModalAberto(true);
-  };
-
-  const fecharModal = () => {
-    setModalAberto(false);
-    setErro("");
-  };
 
   // ============================
   //    FORMATAÇÃO DE INPUTS
@@ -147,9 +61,9 @@ function TabelaProdutos({ usuarioId }) {
   //      SALVAR NO BANCO
   // ============================
   const salvar = async () => {
-    const { id, descricao, valor, condicao, localizacao, aquisicao } = produto;
+    const { descricao, valor, condicao, localizacao, aquisicao } = produto;
 
-    if (!id || !descricao || !valor || !condicao || !localizacao || !aquisicao) {
+    if (!descricao || !valor || !condicao || !localizacao || !aquisicao) {
       setErro("Todos os campos são obrigatórios.");
       return;
     }
@@ -158,12 +72,24 @@ function TabelaProdutos({ usuarioId }) {
       const resp = await fetch("/api/produtos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...produto, usuarioId })
+        body: JSON.stringify({
+          nome: descricao,
+          valor,
+          status: condicao,
+          localizacao,
+          aquisicao,
+          usuario_id: Number(usuarioId),
+        }),
       });
 
-      const novoProduto = await resp.json();
+      const novo = await resp.json();
 
-      const novaLista = [...produtos, novoProduto];
+      if (!resp.ok) {
+        setErro(novo.erro || "Erro ao cadastrar.");
+        return;
+      }
+
+      const novaLista = [...produtos, novo];
       setProdutos(novaLista);
       setProdutosFiltrados(novaLista);
 
@@ -175,7 +101,7 @@ function TabelaProdutos({ usuarioId }) {
   };
 
   // ============================
-  //    TRANSFERÊNCIA / EDIÇÃO
+  //      TRANSFERÊNCIA / EDIÇÃO
   // ============================
   const iniciarTransferencia = () => {
     setModoTransferencia(true);
@@ -185,7 +111,15 @@ function TabelaProdutos({ usuarioId }) {
   const selecionarProdutoTransferencia = (p) => {
     if (!modoTransferencia) return;
 
-    setProduto(p);
+    setProduto({
+      id: p.id,
+      descricao: p.nome,
+      valor: p.valor,
+      condicao: p.status,
+      localizacao: p.localizacao,
+      aquisicao: p.aquisicao,
+    });
+
     setModalTransferencia(true);
   };
 
@@ -194,12 +128,27 @@ function TabelaProdutos({ usuarioId }) {
       const resp = await fetch(`/api/produtos?id=${produto.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(produto),
+        body: JSON.stringify({
+          id: produto.id,
+          nome: produto.descricao,
+          valor: produto.valor,
+          status: produto.condicao,
+          localizacao: produto.localizacao,
+          aquisicao: produto.aquisicao,
+          usuario_id: Number(usuarioId),
+        }),
       });
 
       const atualizado = await resp.json();
 
-      const listaAtualizada = produtos.map((p) => (p.id === atualizado.id ? atualizado : p));
+      if (!resp.ok) {
+        alert(atualizado.erro || "Erro ao atualizar");
+        return;
+      }
+
+      const listaAtualizada = produtos.map((p) =>
+        p.id === atualizado.id ? atualizado : p
+      );
 
       setProdutos(listaAtualizada);
       setProdutosFiltrados(listaAtualizada);
@@ -212,10 +161,34 @@ function TabelaProdutos({ usuarioId }) {
     }
   };
 
+  // ============================
+  //       MODAL / CONTROLES
+  // ============================
+  const abrirModal = () => {
+    setProduto({
+      descricao: "",
+      valor: "",
+      condicao: "em uso",
+      localizacao: "",
+      aquisicao: "",
+    });
+    setErro("");
+    setModalAberto(true);
+  };
+
+  const fecharModal = () => {
+    setModalAberto(false);
+    setErro("");
+  };
+
   const handleSair = () => {
     localStorage.removeItem("usuarioLogado");
     window.location.href = "/";
   };
+
+  // ============================
+  //  (TABELA, MODAIS E RESTANTE)
+  // ============================
 
   return (
     <div className="introducao-container">
@@ -225,20 +198,11 @@ function TabelaProdutos({ usuarioId }) {
       </header>
 
       <div className="conteudo-com-sidebar">
-
-        {/* SIDEBAR */}
         <aside className="sidebar">
           <button className="button" onClick={abrirModal}>Adicionar</button>
-
-          <button className="button" onClick={iniciarTransferencia}>
-            Transferência
-          </button>
-
-          <button className="button" onClick={() => setFiltroAberto(true)}>Filtrar</button>
-          <button className="button" onClick={exportarCSV}>Exportar</button>
+          <button className="button" onClick={iniciarTransferencia}>Transferência</button>
         </aside>
 
-        {/* TABELA */}
         <main className="tabela-main">
           <div className="main-content">
             <h2>Produtos</h2>
@@ -256,24 +220,20 @@ function TabelaProdutos({ usuarioId }) {
               </thead>
 
               <tbody>
-                {produtosFiltrados.length === 0 ? (
-                  <tr><td colSpan="6" style={{ textAlign: "center" }}>Nenhum produto encontrado.</td></tr>
-                ) : (
-                  produtosFiltrados.map((p) => (
-                    <tr
-                      key={p.id}
-                      className={modoTransferencia ? "linha-transferencia" : ""}
-                      onClick={() => selecionarProdutoTransferencia(p)}
-                    >
-                      <td>{p.id}</td>
-                      <td>{p.descricao}</td>
-                      <td>{p.valor}</td>
-                      <td>{p.condicao}</td>
-                      <td>{p.localizacao}</td>
-                      <td>{p.aquisicao}</td>
-                    </tr>
-                  ))
-                )}
+                {produtosFiltrados.map((p) => (
+                  <tr
+                    key={p.id}
+                    className={modoTransferencia ? "linha-transferencia" : ""}
+                    onClick={() => selecionarProdutoTransferencia(p)}
+                  >
+                    <td>{p.id}</td>
+                    <td>{p.nome}</td>
+                    <td>{p.valor}</td>
+                    <td>{p.status}</td>
+                    <td>{p.localizacao}</td>
+                    <td>{p.aquisicao}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
 
@@ -285,9 +245,8 @@ function TabelaProdutos({ usuarioId }) {
                   {erro && <div className="error">{erro}</div>}
 
                   <div className="form">
-                    <input className="input" type="text" name="id" placeholder="ID do Produto" value={produto.id} onChange={handleChange} />
                     <input className="input" type="text" name="descricao" placeholder="Descrição" value={produto.descricao} onChange={handleChange} />
-                    <input className="input" type="text" name="valor" placeholder="Valor (R$)" value={produto.valor} onChange={handleChange} />
+                    <input className="input" type="text" name="valor" placeholder="Valor" value={produto.valor} onChange={handleChange} />
                     <select className="input" name="condicao" value={produto.condicao} onChange={handleChange}>
                       <option value="em uso">Em uso</option>
                       <option value="armazenado">Armazenado</option>
@@ -301,17 +260,17 @@ function TabelaProdutos({ usuarioId }) {
                     <button className="button" onClick={salvar}>Salvar</button>
                     <button className="button cancel-button" onClick={fecharModal}>Cancelar</button>
                   </div>
+
                 </div>
               </div>
             )}
 
-            {/* MODAL TRANSFERÊNCIA (EDIÇÃO SEM ALTERAR ID) */}
+            {/* MODAL TRANSFERÊNCIA */}
             {modalTransferencia && (
               <div className="modal-overlay">
                 <div className="modal-card">
 
                   <div className="form">
-                    <input className="input" type="text" name="id" value={produto.id} disabled />
                     <input className="input" type="text" name="descricao" value={produto.descricao} onChange={handleChange} />
                     <input className="input" type="text" name="valor" value={produto.valor} onChange={handleChange} />
                     <select className="input" name="condicao" value={produto.condicao} onChange={handleChange}>
@@ -326,37 +285,6 @@ function TabelaProdutos({ usuarioId }) {
                   <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
                     <button className="button" onClick={salvarTransferencia}>Salvar Transferência</button>
                     <button className="button cancel-button" onClick={() => setModalTransferencia(false)}>Cancelar</button>
-                  </div>
-
-                </div>
-              </div>
-            )}
-
-            {/* MODAL FILTROS */}
-            {filtroAberto && (
-              <div className="modal-overlay">
-                <div className="modal-card">
-
-                  <div className="form" style={{ textAlign: "left" }}>
-
-                    <h4>Valor</h4>
-                    <label className="input"><input className="custom-radio" type="radio" name="valor" checked={filtroValor === "maior"} onChange={() => setFiltroValor("maior")} /> Maior valor</label>
-                    <label className="input"><input className="custom-radio" type="radio" name="valor" checked={filtroValor === "menor"} onChange={() => setFiltroValor("menor")} /> Menor valor</label>
-
-                    <h4>Condição</h4>
-                    <label className="input"><input className="custom-radio" type="radio" name="condicao" checked={filtroCondicao === "em uso"} onChange={() => setFiltroCondicao("em uso")} /> Em uso</label>
-                    <label className="input"><input className="custom-radio" type="radio" name="condicao" checked={filtroCondicao === "armazenado"} onChange={() => setFiltroCondicao("armazenado")} /> Armazenado</label>
-                    <label className="input"><input className="custom-radio" type="radio" name="condicao" checked={filtroCondicao === "descartado"} onChange={() => setFiltroCondicao("descartado")} /> Descartado</label>
-
-                    <h4>Aquisição</h4>
-                    <label className="input"><input className="custom-radio" type="radio" name="aq" checked={filtroAquisicao === "recentes"} onChange={() => setFiltroAquisicao("recentes")} /> Mais recentes</label>
-                    <label className="input"><input className="custom-radio" type="radio" name="aq" checked={filtroAquisicao === "antigos"} onChange={() => setFiltroAquisicao("antigos")} /> Mais antigos</label>
-                  </div>
-
-                  <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between" }}>
-                    <button className="button" onClick={limparFiltros}>Limpar Filtros</button>
-                    <button className="button" onClick={aplicarFiltros}>Aplicar Filtros</button>
-                    <button className="button cancel-button" onClick={() => setFiltroAberto(false)}>Sair</button>
                   </div>
 
                 </div>
