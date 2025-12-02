@@ -32,12 +32,22 @@ function TabelaProdutos({ usuarioId }) {
       fetch(`/api/produtos?usuario_id=${usuarioId}`)
         .then((r) => r.json())
         .then((data) => {
-          setProdutos(data);
-          setProdutosFiltrados(data);
+
+          // Converte a data retornada pelo banco
+          const ajustados = data.map(p => ({
+            ...p,
+            aquisicao: p.aquisicao
+              ? p.aquisicao.split("T")[0] // remove horário e timezone
+              : ""
+          }));
+
+          setProdutos(ajustados);
+          setProdutosFiltrados(ajustados);
         })
         .catch((err) => console.error("Erro ao carregar produtos:", err));
     }
   }, [usuarioId]);
+
 
   // ============================
   //     EXPORTAÇÃO CSV
@@ -228,7 +238,7 @@ function TabelaProdutos({ usuarioId }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...produto,
-          usuario_id: usuarioId   // 🔥 ENVIO CORRETO DO USUÁRIO TAMBÉM AQUI
+          usuario_id: usuarioId   // ENVIO CORRETO DO USUÁRIO TAMBÉM AQUI
         }),
       });
 
