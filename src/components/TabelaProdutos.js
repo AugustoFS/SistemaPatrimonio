@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
-import { getProdutos, salvarProduto } from "../utils/storage";
 
 function TabelaProdutos({ usuarioId }) {
   const [produtos, setProdutos] = useState([]);
@@ -26,15 +25,24 @@ function TabelaProdutos({ usuarioId }) {
   const [filtroCondicao, setFiltroCondicao] = useState("");
   const [filtroAquisicao, setFiltroAquisicao] = useState("");
 
+  // ============================
+  //     BUSCAR PRODUTOS DB
+  // ============================
   useEffect(() => {
     if (usuarioId) {
-      const lista = getProdutos(usuarioId);
-      setProdutos(lista);
-      setProdutosFiltrados(lista);
+      fetch(`/api/produtos?usuarioId=${usuarioId}`)
+        .then((r) => r.json())
+        .then((data) => {
+          setProdutos(data);
+          setProdutosFiltrados(data);
+        })
+        .catch((err) => console.error("Erro ao carregar produtos:", err));
     }
   }, [usuarioId]);
 
-  // EXPORTAÇÃO CSV
+  // ============================
+  //        EXPORTAÇÃO CSV
+  // ============================
   const exportarCSV = () => {
     const linhas = [
       ["ID", "Descrição", "Valor", "Condição", "Localização", "Aquisição"],
@@ -57,19 +65,18 @@ function TabelaProdutos({ usuarioId }) {
     link.click();
   };
 
-  // APLICAR FILTROS
+  // ============================
+  //         FILTROS
+  // ============================
   const aplicarFiltros = () => {
     let filtrado = [...produtos];
 
     if (filtroValor === "maior") {
-      filtrado.sort((a, b) =>
-        Number(a.valor.replace(/\D/g, "")) < Number(b.valor.replace(/\D/g, "")) ? 1 : -1
-      );
+      filtrado.sort((a, b) => Number(a.valor.replace(/\D/g, "")) < Number(b.valor.replace(/\D/g, "")) ? 1 : -1);
     }
+
     if (filtroValor === "menor") {
-      filtrado.sort((a, b) =>
-        Number(a.valor.replace(/\D/g, "")) > Number(b.valor.replace(/\D/g, "")) ? 1 : -1
-      );
+      filtrado.sort((a, b) => Number(a.valor.replace(/\D/g, "")) > Number(b.valor.replace(/\D/g, "")) ? 1 : -1);
     }
 
     if (filtroCondicao) {
@@ -79,6 +86,7 @@ function TabelaProdutos({ usuarioId }) {
     if (filtroAquisicao === "recentes") {
       filtrado.sort((a, b) => (a.aquisicao < b.aquisicao ? 1 : -1));
     }
+
     if (filtroAquisicao === "antigos") {
       filtrado.sort((a, b) => (a.aquisicao > b.aquisicao ? 1 : -1));
     }
@@ -87,7 +95,6 @@ function TabelaProdutos({ usuarioId }) {
     setFiltroAberto(false);
   };
 
-  // LIMPAR FILTROS
   const limparFiltros = () => {
     setFiltroValor("");
     setFiltroCondicao("");
@@ -95,7 +102,9 @@ function TabelaProdutos({ usuarioId }) {
     setProdutosFiltrados(produtos);
   };
 
-  // MODAL ADICIONAR PRODUTO
+  // ============================
+  //         MODAL
+  // ============================
   const abrirModal = () => {
     setModoTransferencia(false);
     setProduto({
@@ -115,6 +124,9 @@ function TabelaProdutos({ usuarioId }) {
     setErro("");
   };
 
+  // ============================
+  //    FORMATAÇÃO DE INPUTS
+  // ============================
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -131,7 +143,10 @@ function TabelaProdutos({ usuarioId }) {
     setProduto({ ...produto, [name]: value });
   };
 
-  const salvar = () => {
+  // ============================
+  //      SALVAR NO BANCO
+  // ============================
+  const salvar = async () => {
     const { id, descricao, valor, condicao, localizacao, aquisicao } = produto;
 
     if (!id || !descricao || !valor || !condicao || !localizacao || !aquisicao) {
@@ -139,16 +154,29 @@ function TabelaProdutos({ usuarioId }) {
       return;
     }
 
-    const novo = salvarProduto({ ...produto, usuarioId });
+    try {
+      const resp = await fetch("/api/produtos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...produto, usuarioId })
+      });
 
-    const novaLista = [...produtos, novo];
-    setProdutos(novaLista);
-    setProdutosFiltrados(novaLista);
+      const novoProduto = await resp.json();
 
-    fecharModal();
+      const novaLista = [...produtos, novoProduto];
+      setProdutos(novaLista);
+      setProdutosFiltrados(novaLista);
+
+      fecharModal();
+    } catch (err) {
+      console.error("Erro ao salvar produto:", err);
+      setErro("Erro ao salvar produto.");
+    }
   };
 
-  // MODO TRANSFERÊNCIA
+  // ============================
+  //    TRANSFERÊNCIA / EDIÇÃO
+  // ============================
   const iniciarTransferencia = () => {
     setModoTransferencia(true);
     alert("Selecione um produto na tabela para transferir/editar.");
@@ -161,15 +189,27 @@ function TabelaProdutos({ usuarioId }) {
     setModalTransferencia(true);
   };
 
-  const salvarTransferencia = () => {
-    const listaAtualizada = produtos.map((p) =>
-      p.id === produto.id ? produto : p
-    );
+  const salvarTransferencia = async () => {
+    try {
+      const resp = await fetch(`/api/produtos?id=${produto.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(produto),
+      });
 
-    setProdutos(listaAtualizada);
-    setProdutosFiltrados(listaAtualizada);
-    setModalTransferencia(false);
-    setModoTransferencia(false);
+      const atualizado = await resp.json();
+
+      const listaAtualizada = produtos.map((p) => (p.id === atualizado.id ? atualizado : p));
+
+      setProdutos(listaAtualizada);
+      setProdutosFiltrados(listaAtualizada);
+
+      setModalTransferencia(false);
+      setModoTransferencia(false);
+    } catch (err) {
+      console.error("Erro ao atualizar:", err);
+      alert("Erro ao salvar transferência.");
+    }
   };
 
   const handleSair = () => {
