@@ -174,7 +174,7 @@ function TabelaProdutos({ usuarioId }) {
     }
 
     try {
-      const resp = await fetch("/api/produtos", {
+      const resp = await fetch(`/api/produtos?usuario_id=${usuarioId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -183,9 +183,8 @@ function TabelaProdutos({ usuarioId }) {
           valor,
           condicao,
           localizacao,
-          aquisicao,
-          usuario_id: usuarioId,
-        }),
+          aquisicao
+        })
       });
 
       if (!resp.ok) {
@@ -206,27 +205,22 @@ function TabelaProdutos({ usuarioId }) {
     }
   };
 
+
   // ============================
   //     TRANSFERÊNCIA / EDIÇÃO
   // ============================
-  const iniciarTransferencia = () => {
-    setModoTransferencia(true);
-    alert("Selecione um produto na tabela para editar/transferir.");
-  };
-
-  const selecionarProdutoTransferencia = (p) => {
-    if (!modoTransferencia) return;
-    setProduto(p);
-    setModalTransferencia(true);
-  };
-
   const salvarTransferencia = async () => {
     try {
-      const resp = await fetch(`/api/produtos?id=${produto.id}`, {
+      const resp = await fetch(`/api/produtos?id=${produto.id}&usuario_id=${usuarioId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...produto, usuario_id: usuarioId }),
+        body: JSON.stringify(produto)
       });
+
+      if (!resp.ok) {
+        alert("Erro ao salvar transferência.");
+        return;
+      }
 
       const atualizado = await resp.json();
 
@@ -243,6 +237,7 @@ function TabelaProdutos({ usuarioId }) {
       alert("Erro ao salvar transferência.");
     }
   };
+
 
   const handleSair = () => {
     localStorage.removeItem("usuarioLogado");

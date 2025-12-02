@@ -6,30 +6,20 @@ const pool = new Pool({
 });
 
 export default async function handler(req, res) {
-
-    // CORS para frontend hospedado no Vercel
     res.setHeader("Access-Control-Allow-Origin", "https://sistema-patrimonio.vercel.app");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-    // Resposta rápida para preflight
     if (req.method === "OPTIONS") {
         return res.status(200).end();
     }
 
     try {
-        // 🔥 Normalização do usuario_id
-        // Aceita: ?usuario_id= / ?usuarioId= / body.usuario_id / body.usuarioId
-        const usuario_id =
-            req.query.usuario_id ||
-            req.query.usuarioId ||
-            req.body?.usuario_id ||
-            req.body?.usuarioId;
-
-        // ============================================================
-        // GET → Buscar produtos do usuário
-        // ============================================================
+        // =============================================
+        // GET — listar produtos do usuário
+        // =============================================
         if (req.method === "GET") {
+            const usuario_id = req.query.usuario_id;
 
             if (!usuario_id) {
                 return res.status(400).json({ erro: "usuario_id é obrigatório na query (?usuario_id=)" });
@@ -43,77 +33,83 @@ export default async function handler(req, res) {
             return res.status(200).json(result.rows);
         }
 
-        // ============================================================
-        // POST → Criar novo produto
-        // ============================================================
+        // =============================================
+        // POST — cadastrar produto
+        // =============================================
         if (req.method === "POST") {
-            const { nome, valor, status, localizacao, aquisicao } = req.body;
+            const { identificador, descricao, valor, condicao, localizacao, aquisicao, usuario_id } = req.body;
 
-            if (!usuario_id || !nome || !valor || !status || !localizacao || !aquisicao) {
-                return res.status(400).json({ erro: "Todos os campos são obrigatórios" });
+            if (!usuario_id) {
+                return res.status(400).json({ erro: "usuario_id é obrigatório no corpo da requisição" });
+            }
+
+            if (!identificador || !descricao || !valor || !condicao || !localizacao || !aquisicao) {
+                return res.status(400).json({ erro: "Todos os campos são obrigatórios." });
             }
 
             const result = await pool.query(
-                `INSERT INTO produtos (nome, valor, status, localizacao, aquisicao, usuario_id)
-                 VALUES ($1, $2, $3, $4, $5, $6)
+                `INSERT INTO produtos (identificador, descricao, valor, condicao, localizacao, aquisicao, usuario_id)
+                 VALUES ($1, $2, $3, $4, $5, $6, $7)
                  RETURNING *`,
-                [nome, valor, status, localizacao, aquisicao, usuario_id]
+                [identificador, descricao, valor, condicao, localizacao, aquisicao, usuario_id]
             );
 
             return res.status(201).json(result.rows[0]);
         }
 
-        // ============================================================
-        // PUT → Atualizar produto
-        // ============================================================
+        // =============================================
+        // PUT — editar produto
+        // =============================================
         if (req.method === "PUT") {
-            const { id, nome, valor, status, localizacao, aquisicao } = req.body;
+            const { id, identificador, descricao, valor, condicao, localizacao, aquisicao, usuario_id } = req.body;
 
-            if (!id || !usuario_id || !nome || !valor || !status || !localizacao || !aquisicao) {
-                return res.status(400).json({ erro: "Todos os campos são obrigatórios" });
+            if (!id || !usuario_id) {
+                return res.status(400).json({ erro: "id e usuario_id são obrigatórios." });
             }
 
             const result = await pool.query(
-                `UPDATE produtos
-                 SET nome = $1, valor = $2, status = $3, localizacao = $4, aquisicao = $5
-                 WHERE id = $6 AND usuario_id = $7
+                `UPDATE produtos SET 
+                    identificador = $1,
+                    descricao = $2,
+                    valor = $3,
+                    condicao = $4,
+                    localizacao = $5,
+                    aquisicao = $6
+                 WHERE id = $7 AND usuario_id = $8
                  RETURNING *`,
-                [nome, valor, status, localizacao, aquisicao, id, usuario_id]
+                [identificador, descricao, valor, condicao, localizacao, aquisicao, id, usuario_id]
             );
 
             if (result.rows.length === 0) {
-                return res.status(404).json({ erro: "Produto não encontrado ou não pertence ao usuário" });
+                return res.status(404).json({ erro: "Produto não encontrado." });
             }
 
             return res.status(200).json(result.rows[0]);
         }
 
-        // ============================================================
-        // DELETE → Remover produto
-        // ============================================================
+        // =============================================
+        // DELETE — excluir produto
+        // =============================================
         if (req.method === "DELETE") {
             const { id } = req.query;
 
-            if (!id || !usuario_id) {
-                return res.status(400).json({ erro: "id e usuario_id são obrigatórios" });
+            if (!id) {
+                return res.status(400).json({ erro: "id é obrigatório no DELETE" });
             }
 
             const result = await pool.query(
-                `DELETE FROM produtos WHERE id = $1 AND usuario_id = $2 RETURNING *`,
-                [id, usuario_id]
+                "DELETE FROM produtos WHERE id = $1 RETURNING *",
+                [id]
             );
 
             if (result.rowCount === 0) {
-                return res.status(404).json({ erro: "Produto não encontrado ou não pertence ao usuário" });
+                return res.status(404).json({ erro: "Produto não encontrado" });
             }
 
-            return res.status(200).json({ mensagem: "Produto excluído com sucesso" });
+            return res.status(200).json({ mensagem: "Produto removido com sucesso" });
         }
 
-        // ============================================================
-        // Método não permitido
-        // ============================================================
-        return res.status(405).json({ erro: "Método não permitido" });
+        return res.status(405).json({ erro: "Método não permitido." });
 
     } catch (err) {
         console.error("Erro API produtos:", err);
