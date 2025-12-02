@@ -165,62 +165,68 @@ function TabelaProdutos({ usuarioId }) {
   //     SALVAR NO BANCO
   // ============================
   const salvar = async () => {
-    const { identificador, descricao, valor, condicao, localizacao, aquisicao } =
-      produto;
+  const { identificador, descricao, valor, condicao, localizacao, aquisicao } =
+    produto;
 
-    if (!identificador || !descricao || !valor || !condicao || !localizacao || !aquisicao) {
-      setErro("Todos os campos são obrigatórios.");
+  if (!identificador || !descricao || !valor || !condicao || !localizacao || !aquisicao) {
+    setErro("Todos os campos são obrigatórios.");
+    return;
+  }
+
+  try {
+    const resp = await fetch(`/api/produtos?usuario_id=${usuarioId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        identificador,
+        descricao,
+        valor,
+        condicao,
+        localizacao,
+        aquisicao
+      })
+    });
+
+    if (!resp.ok) {
+      setErro("Erro ao cadastrar produto.");
       return;
     }
 
-    try {
-      const resp = await fetch(`/api/produtos?usuario_id=${usuarioId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          identificador,
-          descricao,
-          valor,
-          condicao,
-          localizacao,
-          aquisicao
-        })
-      });
+    const novoProduto = await resp.json();
 
-      if (!resp.ok) {
-        setErro("Erro ao cadastrar produto.");
-        return;
-      }
+    const novaLista = [...produtos, novoProduto];
+    setProdutos(novaLista);
+    setProdutosFiltrados(novaLista);
 
-      const novoProduto = await resp.json();
-
-      const novaLista = [...produtos, novoProduto];
-      setProdutos(novaLista);
-      setProdutosFiltrados(novaLista);
-
-      fecharModal();
-    } catch (err) {
-      console.error(err);
-      setErro("Erro ao salvar produto.");
-    }
-  };
+    fecharModal();
+  } catch (err) {
+    console.error(err);
+    setErro("Erro ao salvar produto.");
+  }
+};
 
 
   // ============================
   //     TRANSFERÊNCIA / EDIÇÃO
   // ============================
+  const iniciarTransferencia = () => {
+    setModoTransferencia(true);
+    alert("Selecione um produto na tabela para editar/transferir.");
+  };
+
+  const selecionarProdutoTransferencia = (p) => {
+    if (!modoTransferencia) return;
+    setProduto(p);
+    setModalTransferencia(true);
+  };
+
   const salvarTransferencia = async () => {
     try {
-      const resp = await fetch(`/api/produtos?id=${produto.id}&usuario_id=${usuarioId}`, {
+      const resp = await fetch(`/api/produtos?id=${produto.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(produto)
+        body: JSON.stringify({ ...produto, usuario_id: usuarioId }),
       });
-
-      if (!resp.ok) {
-        alert("Erro ao salvar transferência.");
-        return;
-      }
 
       const atualizado = await resp.json();
 
@@ -237,7 +243,6 @@ function TabelaProdutos({ usuarioId }) {
       alert("Erro ao salvar transferência.");
     }
   };
-
 
   const handleSair = () => {
     localStorage.removeItem("usuarioLogado");
