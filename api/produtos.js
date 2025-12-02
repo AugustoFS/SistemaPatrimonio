@@ -6,22 +6,33 @@ const pool = new Pool({
 });
 
 export default async function handler(req, res) {
+
     // CORS para frontend hospedado no Vercel
     res.setHeader("Access-Control-Allow-Origin", "https://sistema-patrimonio.vercel.app");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
+    // Resposta rápida para preflight
     if (req.method === "OPTIONS") {
         return res.status(200).end();
     }
 
     try {
-        // ➤ GET — lista produtos por usuário
+        // 🔥 Normalização do usuario_id
+        // Aceita: ?usuario_id= / ?usuarioId= / body.usuario_id / body.usuarioId
+        const usuario_id =
+            req.query.usuario_id ||
+            req.query.usuarioId ||
+            req.body?.usuario_id ||
+            req.body?.usuarioId;
+
+        // ============================================================
+        // GET → Buscar produtos do usuário
+        // ============================================================
         if (req.method === "GET") {
-            const { usuario_id } = req.query;
 
             if (!usuario_id) {
-                return res.status(400).json({ erro: "usuario_id é obrigatório" });
+                return res.status(400).json({ erro: "usuario_id é obrigatório na query (?usuario_id=)" });
             }
 
             const result = await pool.query(
@@ -32,33 +43,38 @@ export default async function handler(req, res) {
             return res.status(200).json(result.rows);
         }
 
-        // ➤ POST — cria um novo produto
+        // ============================================================
+        // POST → Criar novo produto
+        // ============================================================
         if (req.method === "POST") {
-            const { nome, valor, status, localizacao, aquisicao, usuario_id } = req.body;
+            const { nome, valor, status, localizacao, aquisicao } = req.body;
 
-            if (!nome || !valor || !status || !localizacao || !aquisicao || !usuario_id) {
+            if (!usuario_id || !nome || !valor || !status || !localizacao || !aquisicao) {
                 return res.status(400).json({ erro: "Todos os campos são obrigatórios" });
             }
 
             const result = await pool.query(
                 `INSERT INTO produtos (nome, valor, status, localizacao, aquisicao, usuario_id)
-                 VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+                 VALUES ($1, $2, $3, $4, $5, $6)
+                 RETURNING *`,
                 [nome, valor, status, localizacao, aquisicao, usuario_id]
             );
 
             return res.status(201).json(result.rows[0]);
         }
 
-        // ➤ PUT — atualiza produto existente
+        // ============================================================
+        // PUT → Atualizar produto
+        // ============================================================
         if (req.method === "PUT") {
-            const { id, nome, valor, status, localizacao, aquisicao, usuario_id } = req.body;
+            const { id, nome, valor, status, localizacao, aquisicao } = req.body;
 
-            if (!id || !nome || !valor || !status || !localizacao || !aquisicao || !usuario_id) {
+            if (!id || !usuario_id || !nome || !valor || !status || !localizacao || !aquisicao) {
                 return res.status(400).json({ erro: "Todos os campos são obrigatórios" });
             }
 
             const result = await pool.query(
-                `UPDATE produtos 
+                `UPDATE produtos
                  SET nome = $1, valor = $2, status = $3, localizacao = $4, aquisicao = $5
                  WHERE id = $6 AND usuario_id = $7
                  RETURNING *`,
@@ -66,32 +82,37 @@ export default async function handler(req, res) {
             );
 
             if (result.rows.length === 0) {
-                return res.status(404).json({ erro: "Produto não encontrado" });
+                return res.status(404).json({ erro: "Produto não encontrado ou não pertence ao usuário" });
             }
 
             return res.status(200).json(result.rows[0]);
         }
 
-        // ➤ DELETE — exclui produto
+        // ============================================================
+        // DELETE → Remover produto
+        // ============================================================
         if (req.method === "DELETE") {
             const { id } = req.query;
 
-            if (!id) {
-                return res.status(400).json({ erro: "ID do produto é obrigatório" });
+            if (!id || !usuario_id) {
+                return res.status(400).json({ erro: "id e usuario_id são obrigatórios" });
             }
 
             const result = await pool.query(
-                "DELETE FROM produtos WHERE id = $1 RETURNING *",
-                [id]
+                `DELETE FROM produtos WHERE id = $1 AND usuario_id = $2 RETURNING *`,
+                [id, usuario_id]
             );
 
             if (result.rowCount === 0) {
-                return res.status(404).json({ erro: "Produto não encontrado" });
+                return res.status(404).json({ erro: "Produto não encontrado ou não pertence ao usuário" });
             }
 
             return res.status(200).json({ mensagem: "Produto excluído com sucesso" });
         }
 
+        // ============================================================
+        // Método não permitido
+        // ============================================================
         return res.status(405).json({ erro: "Método não permitido" });
 
     } catch (err) {
