@@ -48,7 +48,6 @@ function TabelaProdutos({ usuarioId }) {
     }
   }, [usuarioId]);
 
-
   // ============================
   //     EXPORTAÇÃO CSV
   // ============================
@@ -75,7 +74,6 @@ function TabelaProdutos({ usuarioId }) {
     link.download = "produtos.csv";
     link.click();
   };
-
 
   // ============================
   //     FILTROS
@@ -197,7 +195,7 @@ function TabelaProdutos({ usuarioId }) {
           condicao,
           localizacao,
           aquisicao,
-          usuario_id: usuarioId   // 🔥 ENVIO CORRETO DO USUÁRIO
+          usuario_id: usuarioId   // ENVIO CORRETO DO USUÁRIO
         })
       });
 
@@ -218,7 +216,6 @@ function TabelaProdutos({ usuarioId }) {
       setErro("Erro ao salvar produto.");
     }
   };
-
 
   // ============================
   //     TRANSFERÊNCIA / EDIÇÃO
@@ -266,7 +263,6 @@ function TabelaProdutos({ usuarioId }) {
       alert("Erro ao salvar transferência.");
     }
   };
-
 
   const handleSair = () => {
     localStorage.removeItem("usuarioLogado");
