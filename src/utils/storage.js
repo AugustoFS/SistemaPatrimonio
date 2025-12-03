@@ -1,4 +1,3 @@
-// src/utils/storage.js
 export function getUsuarios() {
   return JSON.parse(localStorage.getItem("usuarios")) || [];
 }

@@ -5,7 +5,6 @@ import "../App.css";
 function Introducao() {
     return (
         <div className="introducao-container">
-            {/* Cabeçalho */}
             <header className="intro-header">
                 <h2 className="intro-logo">Sistema de Patrimônios</h2>
                 <div className="intro-links">
@@ -14,7 +13,6 @@ function Introducao() {
                 </div>
             </header>
 
-            {/* Conteúdo principal */}
             <main className="intro-main">
                 <h1>Bem-vindo ao Sistema de Gerenciamento de Patrimônios</h1>
                 <p>
@@ -24,7 +22,6 @@ function Introducao() {
                 </p>
             </main>
 
-            {/* Rodapé */}
             <footer className="intro-footer">
                 <p>© Sistema de Patrimônios 2025</p>
             </footer>

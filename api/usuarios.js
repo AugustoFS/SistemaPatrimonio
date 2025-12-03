@@ -16,7 +16,6 @@ export default async function handler(req, res) {
         return res.status(200).end();
     }
 
-    // ➤ CADASTRO (POST)
     if (req.method === "POST") {
         const { email, senha } = req.body;
 
@@ -25,7 +24,6 @@ export default async function handler(req, res) {
         }
 
         try {
-            // evitar duplicidade
             const check = await pool.query(
                 "SELECT 1 FROM usuarios WHERE email = $1",
                 [email]
@@ -50,7 +48,6 @@ export default async function handler(req, res) {
         }
     }
 
-    // ➤ LOGIN (GET)
     if (req.method === "GET") {
         const { email, senha } = req.query;
 

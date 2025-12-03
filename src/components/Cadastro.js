@@ -28,7 +28,6 @@ const Cadastro = () => {
         return;
       }
 
-      // Salva usuário logado
       localStorage.setItem("usuarioLogado", data.usuario_id);
 
       setMensagem("Cadastro realizado com sucesso!");

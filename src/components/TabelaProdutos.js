@@ -24,20 +24,16 @@ function TabelaProdutos({ usuarioId }) {
   const [filtroCondicao, setFiltroCondicao] = useState("");
   const [filtroAquisicao, setFiltroAquisicao] = useState("");
 
-  // ============================
-  //     BUSCAR PRODUTOS
-  // ============================
   useEffect(() => {
     if (usuarioId) {
       fetch(`/api/produtos?usuario_id=${usuarioId}`)
         .then((r) => r.json())
         .then((data) => {
 
-          // Converte a data retornada pelo banco
           const ajustados = data.map(p => ({
             ...p,
             aquisicao: p.aquisicao
-              ? p.aquisicao.split("T")[0] // remove horário e timezone
+              ? p.aquisicao.split("T")[0]
               : ""
           }));
 
@@ -48,9 +44,6 @@ function TabelaProdutos({ usuarioId }) {
     }
   }, [usuarioId]);
 
-  // ============================
-  //     EXPORTAÇÃO CSV
-  // ============================
   const exportarCSV = () => {
     const linhas = [
       ["ID", "Descrição", "Valor", "Condição", "Localização", "Aquisição"],
@@ -61,7 +54,6 @@ function TabelaProdutos({ usuarioId }) {
         p.condicao,
         p.localizacao,
 
-        // 🔥 Ajuste da data de aquisição para CSV
         p.aquisicao ? p.aquisicao.split("T")[0] : ""
       ]),
     ];
@@ -75,9 +67,6 @@ function TabelaProdutos({ usuarioId }) {
     link.click();
   };
 
-  // ============================
-  //     FILTROS
-  // ============================
   const aplicarFiltros = () => {
     let filtrado = [...produtos];
 
@@ -122,9 +111,6 @@ function TabelaProdutos({ usuarioId }) {
     setProdutosFiltrados(produtos);
   };
 
-  // ============================
-  //     MODAL
-  // ============================
   const abrirModal = () => {
     setModoTransferencia(false);
     setProduto({
@@ -144,20 +130,15 @@ function TabelaProdutos({ usuarioId }) {
     setErro("");
   };
 
-  // ============================
-  //     FORMATAÇÃO INPUTS
-  // ============================
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // IDENTIFICADOR — APENAS DÍGITOS
     if (name === "identificador") {
       const apenasNumeros = value.replace(/\D/g, "");
       setProduto({ ...produto, identificador: apenasNumeros });
       return;
     }
 
-    // VALOR — FORMATAR EM MOEDA
     if (name === "valor") {
       const numero = value.replace(/\D/g, "");
       const formatado = (Number(numero) / 100).toLocaleString("pt-BR", {
@@ -172,9 +153,6 @@ function TabelaProdutos({ usuarioId }) {
 
   };
 
-  // ============================
-  //     SALVAR NO BANCO
-  // ============================
   const salvar = async () => {
     const { identificador, descricao, valor, condicao, localizacao, aquisicao } =
       produto;
@@ -195,7 +173,7 @@ function TabelaProdutos({ usuarioId }) {
           condicao,
           localizacao,
           aquisicao,
-          usuario_id: usuarioId   // ENVIO CORRETO DO USUÁRIO
+          usuario_id: usuarioId
         })
       });
 
@@ -217,9 +195,6 @@ function TabelaProdutos({ usuarioId }) {
     }
   };
 
-  // ============================
-  //     TRANSFERÊNCIA / EDIÇÃO
-  // ============================
   const iniciarTransferencia = () => {
     setModoTransferencia(true);
     alert("Selecione um produto na tabela para editar/transferir.");
@@ -238,7 +213,7 @@ function TabelaProdutos({ usuarioId }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...produto,
-          usuario_id: usuarioId   // ENVIO CORRETO DO USUÁRIO TAMBÉM AQUI
+          usuario_id: usuarioId
         }),
       });
 
@@ -279,7 +254,7 @@ function TabelaProdutos({ usuarioId }) {
       </header>
 
       <div className="conteudo-com-sidebar">
-        {/* SIDEBAR */}
+
         <aside className="sidebar">
           <button className="button" onClick={abrirModal}>
             Adicionar
@@ -295,7 +270,6 @@ function TabelaProdutos({ usuarioId }) {
           </button>
         </aside>
 
-        {/* TABELA */}
         <main className="tabela-main">
           <div className="main-content">
             <h2>Patrimônios</h2>
@@ -338,7 +312,6 @@ function TabelaProdutos({ usuarioId }) {
               </tbody>
             </table>
 
-            {/* MODAL CADASTRO */}
             {modalAberto && (
               <div className="modal-overlay">
                 <div className="modal-card">
@@ -413,7 +386,6 @@ function TabelaProdutos({ usuarioId }) {
               </div>
             )}
 
-            {/* MODAL TRANSFERÊNCIA */}
             {modalTransferencia && (
               <div className="modal-overlay">
                 <div className="modal-card">
@@ -480,11 +452,9 @@ function TabelaProdutos({ usuarioId }) {
               </div>
             )}
 
-            {/* MODAL FILTROS */}
             {filtroAberto && (
               <div className="modal-overlay">
                 <div className="modal-card">
-                  {/* ... filtros iguais ao seu código original ... */}
 
                   <div className="modal-botoes">
                     <button className="button" onClick={limparFiltros}>

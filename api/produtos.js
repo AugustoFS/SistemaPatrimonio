@@ -15,9 +15,6 @@ export default async function handler(req, res) {
     }
 
     try {
-        // =============================================
-        // GET — listar produtos do usuário
-        // =============================================
         if (req.method === "GET") {
             const usuario_id = req.query.usuario_id;
 
@@ -33,9 +30,6 @@ export default async function handler(req, res) {
             return res.status(200).json(result.rows);
         }
 
-        // =============================================
-        // POST — cadastrar produto
-        // =============================================
         if (req.method === "POST") {
             const { identificador, descricao, valor, condicao, localizacao, aquisicao, usuario_id } = req.body;
 
@@ -57,9 +51,6 @@ export default async function handler(req, res) {
             return res.status(201).json(result.rows[0]);
         }
 
-        // =============================================
-        // PUT — editar produto
-        // =============================================
         if (req.method === "PUT") {
             const { id, identificador, descricao, valor, condicao, localizacao, aquisicao, usuario_id } = req.body;
 
@@ -87,9 +78,6 @@ export default async function handler(req, res) {
             return res.status(200).json(result.rows[0]);
         }
 
-        // =============================================
-        // DELETE — excluir produto
-        // =============================================
         if (req.method === "DELETE") {
             const { id } = req.query;
 
