@@ -61,7 +61,9 @@ function TabelaProdutos({ usuarioId }) {
         p.valor,
         p.condicao,
         p.localizacao,
-        p.aquisicao,
+
+        // 🔥 Ajuste da data de aquisição para CSV
+        p.aquisicao ? p.aquisicao.split("T")[0] : ""
       ]),
     ];
 
@@ -73,6 +75,7 @@ function TabelaProdutos({ usuarioId }) {
     link.download = "produtos.csv";
     link.click();
   };
+
 
   // ============================
   //     FILTROS
@@ -286,7 +289,7 @@ function TabelaProdutos({ usuarioId }) {
             Adicionar
           </button>
           <button className="button" onClick={iniciarTransferencia}>
-            Transferência
+            Alteração
           </button>
           <button className="button" onClick={() => setFiltroAberto(true)}>
             Filtrar
@@ -299,7 +302,7 @@ function TabelaProdutos({ usuarioId }) {
         {/* TABELA */}
         <main className="tabela-main">
           <div className="main-content">
-            <h2>Produtos</h2>
+            <h2>Patrimônios</h2>
 
             <table className="produtos-table produtos-fixa">
               <thead>
