@@ -456,11 +456,8 @@ function TabelaProdutos({ usuarioId }) {
               <div className="modal-overlay">
                 <div className="modal-card filtro-card">
 
-                  <h2 className="modal-titulo">Filtros</h2>
-
                   <div className="form">
 
-                    {/* ORDENAR POR VALOR */}
                     <label className="form-label">Ordenar por valor:</label>
                     <div className="input input-coluna">
 
@@ -471,7 +468,7 @@ function TabelaProdutos({ usuarioId }) {
                           checked={filtroValor === "maior"}
                           onChange={() => setFiltroValor("maior")}
                         />
-                        Maior valor primeiro
+                        <span>Maior valor primeiro</span>
                       </label>
 
                       <label className="radio-item">
@@ -481,7 +478,7 @@ function TabelaProdutos({ usuarioId }) {
                           checked={filtroValor === "menor"}
                           onChange={() => setFiltroValor("menor")}
                         />
-                        Menor valor primeiro
+                        <span>Menor valor primeiro</span>
                       </label>
 
                       <label className="radio-item">
@@ -491,11 +488,11 @@ function TabelaProdutos({ usuarioId }) {
                           checked={filtroValor === ""}
                           onChange={() => setFiltroValor("")}
                         />
-                        Sem ordenação
+                        <span>Sem ordenação</span>
                       </label>
+
                     </div>
 
-                    {/* CONDIÇÃO */}
                     <label className="form-label">Condição:</label>
                     <div className="input input-coluna">
 
@@ -506,7 +503,7 @@ function TabelaProdutos({ usuarioId }) {
                           checked={filtroCondicao === ""}
                           onChange={() => setFiltroCondicao("")}
                         />
-                        Todas
+                        <span>Todas</span>
                       </label>
 
                       <label className="radio-item">
@@ -516,7 +513,7 @@ function TabelaProdutos({ usuarioId }) {
                           checked={filtroCondicao === "em uso"}
                           onChange={() => setFiltroCondicao("em uso")}
                         />
-                        Em uso
+                        <span>Em uso</span>
                       </label>
 
                       <label className="radio-item">
@@ -526,7 +523,7 @@ function TabelaProdutos({ usuarioId }) {
                           checked={filtroCondicao === "armazenado"}
                           onChange={() => setFiltroCondicao("armazenado")}
                         />
-                        Armazenado
+                        <span>Armazenado</span>
                       </label>
 
                       <label className="radio-item">
@@ -536,11 +533,11 @@ function TabelaProdutos({ usuarioId }) {
                           checked={filtroCondicao === "descartado"}
                           onChange={() => setFiltroCondicao("descartado")}
                         />
-                        Descartado
+                        <span>Descartado</span>
                       </label>
+
                     </div>
 
-                    {/* AQUISIÇÃO */}
                     <label className="form-label">Data de aquisição:</label>
                     <div className="input input-coluna">
 
@@ -551,7 +548,7 @@ function TabelaProdutos({ usuarioId }) {
                           checked={filtroAquisicao === ""}
                           onChange={() => setFiltroAquisicao("")}
                         />
-                        Sem filtro
+                        <span>Sem filtro</span>
                       </label>
 
                       <label className="radio-item">
@@ -561,7 +558,7 @@ function TabelaProdutos({ usuarioId }) {
                           checked={filtroAquisicao === "recentes"}
                           onChange={() => setFiltroAquisicao("recentes")}
                         />
-                        Mais recentes primeiro
+                        <span>Mais recentes primeiro</span>
                       </label>
 
                       <label className="radio-item">
@@ -571,14 +568,13 @@ function TabelaProdutos({ usuarioId }) {
                           checked={filtroAquisicao === "antigos"}
                           onChange={() => setFiltroAquisicao("antigos")}
                         />
-                        Mais antigos primeiro
+                        <span>Mais antigos primeiro</span>
                       </label>
 
                     </div>
 
                   </div>
 
-                  {/* BOTÕES */}
                   <div className="modal-botoes">
                     <button className="button" onClick={limparFiltros}>
                       Limpar Filtros
@@ -599,7 +595,6 @@ function TabelaProdutos({ usuarioId }) {
                 </div>
               </div>
             )}
-
           </div>
         </main>
       </div>
