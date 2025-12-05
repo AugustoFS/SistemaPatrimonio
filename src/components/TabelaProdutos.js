@@ -456,12 +456,8 @@ function TabelaProdutos({ usuarioId }) {
               <div className="modal-overlay">
                 <div className="modal-card filtro-card">
 
-                  <h2 className="modal-titulo">Filtros</h2>
-
                   <div className="form">
 
-                    {/* ORDENAR POR VALOR */}
-                    <label className="form-label">Ordenar por valor:</label>
                     <select
                       className="input"
                       value={filtroValor}
@@ -472,8 +468,6 @@ function TabelaProdutos({ usuarioId }) {
                       <option value="menor">Menor valor primeiro</option>
                     </select>
 
-                    {/* CONDIÇÃO */}
-                    <label className="form-label">Condição:</label>
                     <select
                       className="input"
                       value={filtroCondicao}
@@ -485,8 +479,6 @@ function TabelaProdutos({ usuarioId }) {
                       <option value="descartado">Descartado</option>
                     </select>
 
-                    {/* DATA DE AQUISIÇÃO */}
-                    <label className="form-label">Data de aquisição:</label>
                     <select
                       className="input"
                       value={filtroAquisicao}
@@ -499,7 +491,6 @@ function TabelaProdutos({ usuarioId }) {
 
                   </div>
 
-                  {/* BOTÕES */}
                   <div className="modal-botoes">
                     <button className="button" onClick={limparFiltros}>
                       Limpar Filtros
