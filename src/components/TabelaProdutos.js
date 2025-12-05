@@ -456,13 +456,52 @@ function TabelaProdutos({ usuarioId }) {
               <div className="modal-overlay">
                 <div className="modal-card">
 
+                  <div className="form">
+                    <label>Ordenar por valor:</label>
+                    <select
+                      className="input"
+                      value={filtroValor}
+                      onChange={(e) => setFiltroValor(e.target.value)}
+                    >
+                      <option value="">Nenhum</option>
+                      <option value="maior">Maior valor</option>
+                      <option value="menor">Menor valor</option>
+                    </select>
+
+                    <label>Condição:</label>
+                    <select
+                      className="input"
+                      value={filtroCondicao}
+                      onChange={(e) => setFiltroCondicao(e.target.value)}
+                    >
+                      <option value="">Todas</option>
+                      <option value="em uso">Em uso</option>
+                      <option value="armazenado">Armazenado</option>
+                      <option value="descartado">Descartado</option>
+                    </select>
+
+                    <label>Data de aquisição:</label>
+                    <select
+                      className="input"
+                      value={filtroAquisicao}
+                      onChange={(e) => setFiltroAquisicao(e.target.value)}
+                    >
+                      <option value="">Sem filtro</option>
+                      <option value="recentes">Mais recentes primeiro</option>
+                      <option value="antigos">Mais antigos primeiro</option>
+                    </select>
+
+                  </div>
+
                   <div className="modal-botoes">
                     <button className="button" onClick={limparFiltros}>
                       Limpar Filtros
                     </button>
+
                     <button className="button" onClick={aplicarFiltros}>
                       Aplicar Filtros
                     </button>
+
                     <button
                       className="button cancel-button"
                       onClick={() => setFiltroAberto(false)}
