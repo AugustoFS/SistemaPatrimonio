@@ -457,39 +457,118 @@ function TabelaProdutos({ usuarioId }) {
                 <div className="modal-card">
 
                   <div className="form">
-                    <label>Ordenar por valor:</label>
-                    <select
-                      className="input"
-                      value={filtroValor}
-                      onChange={(e) => setFiltroValor(e.target.value)}
-                    >
-                      <option value="">Nenhum</option>
-                      <option value="maior">Maior valor</option>
-                      <option value="menor">Menor valor</option>
-                    </select>
 
-                    <label>Condição:</label>
-                    <select
-                      className="input"
-                      value={filtroCondicao}
-                      onChange={(e) => setFiltroCondicao(e.target.value)}
-                    >
-                      <option value="">Todas</option>
-                      <option value="em uso">Em uso</option>
-                      <option value="armazenado">Armazenado</option>
-                      <option value="descartado">Descartado</option>
-                    </select>
+                    <label style={{ fontWeight: "bold" }}>Ordenar por valor:</label>
+                    <div className="input" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
 
-                    <label>Data de aquisição:</label>
-                    <select
-                      className="input"
-                      value={filtroAquisicao}
-                      onChange={(e) => setFiltroAquisicao(e.target.value)}
-                    >
-                      <option value="">Sem filtro</option>
-                      <option value="recentes">Mais recentes primeiro</option>
-                      <option value="antigos">Mais antigos primeiro</option>
-                    </select>
+                      <label>
+                        <input
+                          type="radio"
+                          name="ordemValor"
+                          checked={filtroValor === "maior"}
+                          onChange={() => setFiltroValor("maior")}
+                        />
+                        Maior valor primeiro
+                      </label>
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="ordemValor"
+                          checked={filtroValor === "menor"}
+                          onChange={() => setFiltroValor("menor")}
+                        />
+                        Menor valor primeiro
+                      </label>
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="ordemValor"
+                          checked={filtroValor === ""}
+                          onChange={() => setFiltroValor("")}
+                        />
+                        Sem ordenação
+                      </label>
+                    </div>
+
+                    <label style={{ fontWeight: "bold", marginTop: "15px" }}>Condição:</label>
+                    <div className="input" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="condicaoItem"
+                          checked={filtroCondicao === ""}
+                          onChange={() => setFiltroCondicao("")}
+                        />
+                        Todas
+                      </label>
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="condicaoItem"
+                          checked={filtroCondicao === "em uso"}
+                          onChange={() => setFiltroCondicao("em uso")}
+                        />
+                        Em uso
+                      </label>
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="condicaoItem"
+                          checked={filtroCondicao === "armazenado"}
+                          onChange={() => setFiltroCondicao("armazenado")}
+                        />
+                        Armazenado
+                      </label>
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="condicaoItem"
+                          checked={filtroCondicao === "descartado"}
+                          onChange={() => setFiltroCondicao("descartado")}
+                        />
+                        Descartado
+                      </label>
+                    </div>
+
+                    <label style={{ fontWeight: "bold", marginTop: "15px" }}>Data de aquisição:</label>
+                    <div className="input" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="aquisicaoData"
+                          checked={filtroAquisicao === ""}
+                          onChange={() => setFiltroAquisicao("")}
+                        />
+                        Sem filtro
+                      </label>
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="aquisicaoData"
+                          checked={filtroAquisicao === "recentes"}
+                          onChange={() => setFiltroAquisicao("recentes")}
+                        />
+                        Mais recentes primeiro
+                      </label>
+
+                      <label>
+                        <input
+                          type="radio"
+                          name="aquisicaoData"
+                          checked={filtroAquisicao === "antigos"}
+                          onChange={() => setFiltroAquisicao("antigos")}
+                        />
+                        Mais antigos primeiro
+                      </label>
+                    </div>
 
                   </div>
 
