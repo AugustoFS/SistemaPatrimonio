@@ -456,125 +456,50 @@ function TabelaProdutos({ usuarioId }) {
               <div className="modal-overlay">
                 <div className="modal-card filtro-card">
 
+                  <h2 className="modal-titulo">Filtros</h2>
+
                   <div className="form">
 
+                    {/* ORDENAR POR VALOR */}
                     <label className="form-label">Ordenar por valor:</label>
-                    <div className="input input-coluna">
+                    <select
+                      className="input"
+                      value={filtroValor}
+                      onChange={(e) => setFiltroValor(e.target.value)}
+                    >
+                      <option value="">Sem ordenação</option>
+                      <option value="maior">Maior valor primeiro</option>
+                      <option value="menor">Menor valor primeiro</option>
+                    </select>
 
-                      <label className="radio-item">
-                        <input
-                          type="radio"
-                          name="ordemValor"
-                          checked={filtroValor === "maior"}
-                          onChange={() => setFiltroValor("maior")}
-                        />
-                        <span>Maior valor primeiro</span>
-                      </label>
-
-                      <label className="radio-item">
-                        <input
-                          type="radio"
-                          name="ordemValor"
-                          checked={filtroValor === "menor"}
-                          onChange={() => setFiltroValor("menor")}
-                        />
-                        <span>Menor valor primeiro</span>
-                      </label>
-
-                      <label className="radio-item">
-                        <input
-                          type="radio"
-                          name="ordemValor"
-                          checked={filtroValor === ""}
-                          onChange={() => setFiltroValor("")}
-                        />
-                        <span>Sem ordenação</span>
-                      </label>
-
-                    </div>
-
+                    {/* CONDIÇÃO */}
                     <label className="form-label">Condição:</label>
-                    <div className="input input-coluna">
+                    <select
+                      className="input"
+                      value={filtroCondicao}
+                      onChange={(e) => setFiltroCondicao(e.target.value)}
+                    >
+                      <option value="">Todas</option>
+                      <option value="em uso">Em uso</option>
+                      <option value="armazenado">Armazenado</option>
+                      <option value="descartado">Descartado</option>
+                    </select>
 
-                      <label className="radio-item">
-                        <input
-                          type="radio"
-                          name="condicaoItem"
-                          checked={filtroCondicao === ""}
-                          onChange={() => setFiltroCondicao("")}
-                        />
-                        <span>Todas</span>
-                      </label>
-
-                      <label className="radio-item">
-                        <input
-                          type="radio"
-                          name="condicaoItem"
-                          checked={filtroCondicao === "em uso"}
-                          onChange={() => setFiltroCondicao("em uso")}
-                        />
-                        <span>Em uso</span>
-                      </label>
-
-                      <label className="radio-item">
-                        <input
-                          type="radio"
-                          name="condicaoItem"
-                          checked={filtroCondicao === "armazenado"}
-                          onChange={() => setFiltroCondicao("armazenado")}
-                        />
-                        <span>Armazenado</span>
-                      </label>
-
-                      <label className="radio-item">
-                        <input
-                          type="radio"
-                          name="condicaoItem"
-                          checked={filtroCondicao === "descartado"}
-                          onChange={() => setFiltroCondicao("descartado")}
-                        />
-                        <span>Descartado</span>
-                      </label>
-
-                    </div>
-
+                    {/* DATA DE AQUISIÇÃO */}
                     <label className="form-label">Data de aquisição:</label>
-                    <div className="input input-coluna">
-
-                      <label className="radio-item">
-                        <input
-                          type="radio"
-                          name="aquisicaoData"
-                          checked={filtroAquisicao === ""}
-                          onChange={() => setFiltroAquisicao("")}
-                        />
-                        <span>Sem filtro</span>
-                      </label>
-
-                      <label className="radio-item">
-                        <input
-                          type="radio"
-                          name="aquisicaoData"
-                          checked={filtroAquisicao === "recentes"}
-                          onChange={() => setFiltroAquisicao("recentes")}
-                        />
-                        <span>Mais recentes primeiro</span>
-                      </label>
-
-                      <label className="radio-item">
-                        <input
-                          type="radio"
-                          name="aquisicaoData"
-                          checked={filtroAquisicao === "antigos"}
-                          onChange={() => setFiltroAquisicao("antigos")}
-                        />
-                        <span>Mais antigos primeiro</span>
-                      </label>
-
-                    </div>
+                    <select
+                      className="input"
+                      value={filtroAquisicao}
+                      onChange={(e) => setFiltroAquisicao(e.target.value)}
+                    >
+                      <option value="">Sem filtro</option>
+                      <option value="recentes">Mais recentes primeiro</option>
+                      <option value="antigos">Mais antigos primeiro</option>
+                    </select>
 
                   </div>
 
+                  {/* BOTÕES */}
                   <div className="modal-botoes">
                     <button className="button" onClick={limparFiltros}>
                       Limpar Filtros
@@ -595,6 +520,7 @@ function TabelaProdutos({ usuarioId }) {
                 </div>
               </div>
             )}
+
           </div>
         </main>
       </div>
