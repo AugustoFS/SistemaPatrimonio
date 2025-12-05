@@ -454,14 +454,17 @@ function TabelaProdutos({ usuarioId }) {
 
             {filtroAberto && (
               <div className="modal-overlay">
-                <div className="modal-card">
+                <div className="modal-card filtro-card">
+
+                  <h2 className="modal-titulo">Filtros</h2>
 
                   <div className="form">
 
-                    <label style={{ fontWeight: "bold" }}>Ordenar por valor:</label>
-                    <div className="input" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                    {/* ORDENAR POR VALOR */}
+                    <label className="form-label">Ordenar por valor:</label>
+                    <div className="input input-coluna">
 
-                      <label>
+                      <label className="radio-item">
                         <input
                           type="radio"
                           name="ordemValor"
@@ -471,7 +474,7 @@ function TabelaProdutos({ usuarioId }) {
                         Maior valor primeiro
                       </label>
 
-                      <label>
+                      <label className="radio-item">
                         <input
                           type="radio"
                           name="ordemValor"
@@ -481,7 +484,7 @@ function TabelaProdutos({ usuarioId }) {
                         Menor valor primeiro
                       </label>
 
-                      <label>
+                      <label className="radio-item">
                         <input
                           type="radio"
                           name="ordemValor"
@@ -492,10 +495,11 @@ function TabelaProdutos({ usuarioId }) {
                       </label>
                     </div>
 
-                    <label style={{ fontWeight: "bold", marginTop: "15px" }}>Condição:</label>
-                    <div className="input" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                    {/* CONDIÇÃO */}
+                    <label className="form-label">Condição:</label>
+                    <div className="input input-coluna">
 
-                      <label>
+                      <label className="radio-item">
                         <input
                           type="radio"
                           name="condicaoItem"
@@ -505,7 +509,7 @@ function TabelaProdutos({ usuarioId }) {
                         Todas
                       </label>
 
-                      <label>
+                      <label className="radio-item">
                         <input
                           type="radio"
                           name="condicaoItem"
@@ -515,7 +519,7 @@ function TabelaProdutos({ usuarioId }) {
                         Em uso
                       </label>
 
-                      <label>
+                      <label className="radio-item">
                         <input
                           type="radio"
                           name="condicaoItem"
@@ -525,7 +529,7 @@ function TabelaProdutos({ usuarioId }) {
                         Armazenado
                       </label>
 
-                      <label>
+                      <label className="radio-item">
                         <input
                           type="radio"
                           name="condicaoItem"
@@ -536,10 +540,11 @@ function TabelaProdutos({ usuarioId }) {
                       </label>
                     </div>
 
-                    <label style={{ fontWeight: "bold", marginTop: "15px" }}>Data de aquisição:</label>
-                    <div className="input" style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                    {/* AQUISIÇÃO */}
+                    <label className="form-label">Data de aquisição:</label>
+                    <div className="input input-coluna">
 
-                      <label>
+                      <label className="radio-item">
                         <input
                           type="radio"
                           name="aquisicaoData"
@@ -549,7 +554,7 @@ function TabelaProdutos({ usuarioId }) {
                         Sem filtro
                       </label>
 
-                      <label>
+                      <label className="radio-item">
                         <input
                           type="radio"
                           name="aquisicaoData"
@@ -559,7 +564,7 @@ function TabelaProdutos({ usuarioId }) {
                         Mais recentes primeiro
                       </label>
 
-                      <label>
+                      <label className="radio-item">
                         <input
                           type="radio"
                           name="aquisicaoData"
@@ -568,10 +573,12 @@ function TabelaProdutos({ usuarioId }) {
                         />
                         Mais antigos primeiro
                       </label>
+
                     </div>
 
                   </div>
 
+                  {/* BOTÕES */}
                   <div className="modal-botoes">
                     <button className="button" onClick={limparFiltros}>
                       Limpar Filtros
@@ -588,9 +595,11 @@ function TabelaProdutos({ usuarioId }) {
                       Sair
                     </button>
                   </div>
+
                 </div>
               </div>
             )}
+
           </div>
         </main>
       </div>
